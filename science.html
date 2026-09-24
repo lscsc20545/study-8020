@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>80-20 적응학습 · 중1 사회 Ⅰ·Ⅱ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --navy:#1E3A5F; --blue:#2563EB; --blue-h:#1d4ed8; --sky:#4A90D9;
+    --bg:#f5f7fa; --card:#ffffff; --line:#d4dbe6;
+    --ink:#1e2a3a; --sub:#3d4f63; --mute:#3d4f63;
+    --green:#059669; --amber:#D97706; --red:#DC2626;
+  }
+  body{
+    font-family:'Noto Sans KR', sans-serif; background:var(--bg); color:var(--ink);
+    min-height:100vh; padding:18px 14px 60px; font-size:15px; line-height:1.6;
+    -webkit-text-size-adjust:100%;
+  }
+  .app{ max-width:760px; margin:0 auto; }
+
+  /* header */
+  .head{
+    background:var(--navy); color:#fff; border-radius:20px 20px 8px 8px;
+    padding:22px 24px 20px; position:relative; overflow:hidden;
+  }
+  .head h1{ font-size:23px; font-weight:900; letter-spacing:-0.4px; }
+  .head .sub{ font-size:13px; color:#a9c8f0; margin-top:5px; font-weight:500; }
+  .head .badge{
+    position:absolute; top:20px; right:22px; background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.28); border-radius:999px;
+    font-size:12px; padding:4px 11px; font-weight:700; color:#dbeafe;
+  }
+
+  /* tabs */
+  .profbar, .diffbar{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:12px 0 -4px; }
+  .profbar .pl, .diffbar .pl{ font-size:12px; font-weight:800; color:var(--sub); margin-right:2px; }
+  .diffbar .dinfo{ font-size:12px; color:var(--sub); margin-left:4px; }
+  .card.sug{ background:#fff8ec; border-color:#f0d6a8; }
+  .pchip{
+    font-family:inherit; font-size:12px; font-weight:700; padding:6px 12px; border-radius:99px;
+    border:1.5px solid var(--line); background:#fff; color:var(--sub); cursor:pointer; transition:.15s;
+  }
+  .pchip:hover{ border-color:var(--sky); color:var(--navy); }
+  .pchip.on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .pchip.add{ border-style:dashed; border-color:#bcd6f8; color:var(--blue); }
+  .tabs{ display:flex; gap:6px; margin:14px 0 16px; flex-wrap:wrap; }
+  .tab{
+    flex:1; min-width:88px; text-align:center; font-size:13px; font-weight:700;
+    padding:10px 8px; border:2px solid var(--line); background:#fff; color:var(--sub);
+    border-radius:12px; cursor:pointer; font-family:inherit; transition:.15s;
+  }
+  .tab:hover{ border-color:var(--sky); color:var(--navy); }
+  .tab.on{ background:var(--blue); border-color:var(--blue); color:#fff; }
+
+  .card{
+    background:var(--card); border-radius:16px; border:1px solid var(--line);
+    box-shadow:0 1px 4px rgba(30,42,58,.06); padding:22px; margin-bottom:14px;
+  }
+  .card.bar{ overflow:hidden; }
+  .card.bar > h2:first-child{
+    background:#eef4ff; margin:-22px -22px 14px; padding:16px 22px 14px;
+    border-radius:15px 15px 0 0; border-bottom:1px solid #dbe7fb;
+  }
+  .card h2{ font-size:17px; font-weight:900; color:var(--navy); margin-bottom:12px; letter-spacing:-0.3px; }
+  .card h3{ font-size:14px; font-weight:700; color:var(--navy); margin:14px 0 7px; }
+  .muted{ color:var(--mute); font-size:13px; }
+  .hidden{ display:none !important; }
+
+  /* kpi */
+  .kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .kpi{
+    background:#f8fbff; border:1px solid #dbe7fb;
+    border-radius:14px; padding:14px 12px; text-align:center;
+  }
+  .kpi .v{ font-size:22px; font-weight:900; color:var(--blue); }
+  .kpi .l{ font-size:12px; color:var(--sub); font-weight:700; margin-top:2px; }
+
+  /* button */
+  .btn{
+    display:block; width:100%; font-family:inherit; font-size:16px; font-weight:800;
+    padding:16px; border:none; border-radius:14px; background:var(--blue); color:#fff;
+    cursor:pointer; transition:.15s; text-align:center;
+  }
+  .btn:hover{ background:var(--blue-h); }
+  .btn.ghost{ background:#fff; color:var(--navy); border:2px solid var(--line); font-size:14px; padding:12px; }
+  .btn.ghost:hover{ border-color:var(--sky); background:#f8fbff; }
+  .btn.small{ font-size:13px; padding:10px 14px; width:auto; display:inline-block; }
+  .btnrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btnrow .btn{ flex:1; min-width:130px; }
+
+  /* progress */
+  .pbar{ height:9px; background:#e6ecf4; border-radius:99px; overflow:hidden; margin:10px 0 6px; }
+  .pbar > i{ display:block; height:100%; background:var(--blue); width:0%; transition:.25s; border-radius:99px; }
+  .pmeta{ display:flex; justify-content:space-between; font-size:12px; color:var(--sub); font-weight:700; }
+
+  /* concept intro card */
+  .intro{ border-radius:16px; overflow:hidden; border:1px solid #c5d8f6; margin-bottom:14px; }
+  .intro .top{ background:#eef4ff; padding:13px 18px; font-size:13px; font-weight:800; color:var(--blue); }
+  .intro .body{ background:#fff; padding:18px; }
+  .step{ display:flex; gap:11px; margin-bottom:13px; }
+  .step:last-child{ margin-bottom:0; }
+  .step .no{
+    flex:0 0 26px; height:26px; border-radius:50%; background:#eef4ff; color:var(--blue);
+    font-size:12px; font-weight:900; display:flex; align-items:center; justify-content:center;
+  }
+  .step .tx{ font-size:14px; color:var(--ink); }
+  .step .lb{ font-size:12px; font-weight:800; color:var(--sub); display:block; margin-bottom:2px; }
+  .step.new .no{ background:#fef3e2; color:var(--amber); }
+  .step.new .lb{ color:var(--amber); }
+  .ratio{ font-size:12px; color:var(--sub); font-weight:700; margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); }
+
+  /* question */
+  .qnum{ font-size:12px; font-weight:800; color:var(--sub); }
+  .stem{ font-size:17px; font-weight:700; margin:9px 0 15px; line-height:1.55; }
+  .ch{
+    display:flex; gap:11px; align-items:flex-start; width:100%; text-align:left;
+    font-family:inherit; font-size:15px; padding:13px 15px; margin-bottom:9px;
+    background:#fff; border:2px solid var(--line); border-radius:13px; cursor:pointer;
+    transition:.12s; color:var(--ink); line-height:1.45;
+  }
+  .ch:hover:not(:disabled){ border-color:var(--sky); background:#f8fbff; }
+  .ch:disabled{ cursor:default; }
+  .ch .k{
+    flex:0 0 24px; height:24px; border-radius:8px; background:#f1f5fa; color:var(--sub);
+    font-size:12px; font-weight:900; display:flex; align-items:center; justify-content:center;
+  }
+  .ch.ok{ border-color:var(--green); background:#f0fdf7; }
+  .ch.ok .k{ background:var(--green); color:#fff; }
+  .ch.no{ border-color:var(--red); background:#fef4f4; }
+  .ch.no .k{ background:var(--red); color:#fff; }
+  .fb{ border-radius:13px; padding:15px; margin:12px 0; font-size:14px; }
+  .fb.ok{ background:#f0fdf7; border:1px solid #a7e3c6; }
+  .fb.no{ background:#fef4f4; border:1px solid #f5b9b9; }
+  .fb .t{ font-weight:900; font-size:14px; margin-bottom:5px; }
+  .fb.ok .t{ color:var(--green); }
+  .fb.no .t{ color:var(--red); }
+
+  /* map */
+  .unitbox{ margin-bottom:16px; }
+  .unitbox .ut{ font-size:15px; font-weight:900; color:var(--navy); margin-bottom:8px; }
+  .secbox{ margin:0 0 12px 6px; }
+  .secbox .st{ font-size:13px; font-weight:700; color:var(--sub); margin-bottom:7px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    font-size:12px; font-weight:700; padding:6px 11px; border-radius:999px;
+    border:1.5px solid var(--line); background:#fff; color:var(--sub); cursor:pointer;
+  }
+  .chip.s0{ background:#f1f5fa; color:#3d4f63; border-color:#dbe3ee; }
+  .chip.s1{ background:#fff4e6; color:#8a5200; border-color:#ffd9a8; }
+  .chip.s2{ background:#e8f2ff; color:#1d4ed8; border-color:#bcd6f8; }
+  .chip.s3{ background:#eafaf1; color:#046c4e; border-color:#a7e3c6; }
+  .legend{ display:flex; gap:10px; flex-wrap:wrap; font-size:12px; margin-top:6px; }
+  .legend .chip{ cursor:default; }
+
+  /* today cards */
+  .tcard{ border-left:4px solid var(--amber); background:#fffbf3; border-radius:10px; padding:13px 15px; margin-bottom:9px; }
+  .tcard .h{ font-size:13px; font-weight:900; color:#8a5200; margin-bottom:4px; }
+  .tcard .k{ font-size:14px; font-weight:700; color:var(--ink); }
+  .tcard .e{ font-size:13px; color:var(--sub); margin-top:4px; }
+
+  /* why */
+  .whyline{ display:flex; gap:11px; margin-bottom:12px; }
+  .whyline .n{ flex:0 0 30px; height:30px; border-radius:10px; background:var(--blue); color:#fff;
+    font-size:13px; font-weight:900; display:flex; align-items:center; justify-content:center; }
+
+  textarea{
+    width:100%; min-height:120px; font-family:ui-monospace,Consolas,monospace; font-size:12px;
+    padding:12px; border:2px solid var(--line); border-radius:12px; resize:vertical; color:var(--ink);
+  }
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    background:var(--navy); color:#fff; font-size:13px; font-weight:700;
+    padding:11px 20px; border-radius:99px; opacity:0; pointer-events:none; transition:.25s; z-index:50;
+  }
+  .toast.on{ opacity:1; }
+  table.tbl{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.tbl th{ background:var(--navy); color:#fff; font-size:12px; padding:9px 8px; text-align:left; }
+  table.tbl td{ padding:9px 8px; border-bottom:1px solid #eef2f7; }
+  table.tbl tr:nth-child(even) td{ background:#f8fafc; }
+  .swatch{ display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+  @media (max-width:520px){
+    .head h1{ font-size:20px; } .head .badge{ display:none; }
+    .kpis{ grid-template-columns:1fr 1fr; }
+    .stem{ font-size:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="head">
+    <h1>80-20 적응학습</h1>
+    <div class="sub">중1 사회 Ⅰ·Ⅱ · 정답률 85% 구간 자동 유지</div>
+    <div class="badge">목표 정답률 85%</div>
+  </div>
+
+  <div class="profbar" id="profbar"></div>
+  <div class="diffbar" id="diffbar"></div>
+
+  <div class="tabs">
+    <button class="tab on" data-t="home" onclick="go('home')">홈</button>
+    <button class="tab" data-t="map" onclick="go('map')">개념 지도</button>
+    <button class="tab" data-t="why" onclick="go('why')">왜 이렇게</button>
+    <button class="tab" data-t="report" onclick="go('report')">리포트</button>
+  </div>
+
+  <!-- 홈 -->
+  <div id="sc-home">
+    <div class="kpis">
+      <div class="kpi"><div class="v" id="k-c">0</div><div class="l">배운 개념</div></div>
+      <div class="kpi"><div class="v" id="k-q">0</div><div class="l">푼 문항</div></div>
+      <div class="kpi"><div class="v" id="k-a">-</div><div class="l">최근 정답률</div></div>
+    </div>
+    <div class="card bar" id="home-main">
+      <h2 id="home-title">먼저 12문항 진단</h2>
+      <p class="muted" id="home-desc">지금 어디까지 알고 있는지 12문항으로 가볍게 확인해요. 6분쯤 걸려요.</p>
+      <div class="pbar"><i id="home-fill"></i></div>
+      <div class="pmeta"><span id="home-pct">학습 진행 0%</span><span id="home-meta"></span></div>
+      <button class="btn" id="home-btn" style="margin-top:14px" onclick="startMain()">진단 시작</button>
+    </div>
+    <div id="diff-sug" class="hidden"></div>
+    <div class="card">
+      <h2>이 앱이 하는 일</h2>
+      <p class="muted" style="font-size:14px">
+        아는 것 80~90%에 새로운 것 10~20%를 섞으면 뇌가 가장 잘 배워요.
+        이 앱은 문항 난이도를 자동으로 조절해 <b>정답률 85% 구간</b>을 계속 유지하고,
+        15문항 중 3문항(20%)은 새 개념에 배정해요.
+      </p>
+    </div>
+    <div class="card hidden" id="last-sess-box">
+      <h2>최근 학습</h2>
+      <table class="tbl" id="sess-tbl"></table>
+    </div>
+  </div>
+
+  <!-- 퀴즈 -->
+  <div id="sc-quiz" class="hidden">
+    <div class="card">
+      <div class="pmeta"><span id="q-prog">1 / 15</span><span id="q-tag">학습</span></div>
+      <div class="pbar"><i id="q-fill"></i></div>
+      <div id="q-area"></div>
+    </div>
+    <button class="btn ghost" onclick="quitQuiz()">그만하기</button>
+  </div>
+
+  <!-- 결과 -->
+  <div id="sc-res" class="hidden"></div>
+
+  <!-- 개념 지도 (renderMap이 컨테이너 전체를 다시 그린다) -->
+  <div id="sc-map" class="hidden"></div>
+
+  <!-- 왜 이렇게 -->
+  <div id="sc-why" class="hidden">
+    <div class="card bar">
+      <h2>뇌는 '살짝 헷갈리는 순간'에 배운다</h2>
+      <p style="font-size:14px">
+        뇌는 이미 아는 것은 흘려보내고, 너무 어려운 것은 튕겨낸다. 학습 회로가 켜지는 건
+        <b>알 것 같은데 딱 한 끗 모자란 순간의 오차(error)</b>가 생길 때다.
+        언어학자 크라센은 이걸 '이해 가능한 입력(i+1)'이라 불렀고,
+        학습과학에서는 <b>정답률 85% 부근이 학습 효율이 가장 높다</b>는 결과가 나와 있다.
+      </p>
+    </div>
+    <div class="card">
+      <h2>이 앱에 넣은 4가지</h2>
+      <div class="whyline"><div class="n">1</div><div>
+        <b>현수준 진단</b><br><span class="muted">12문항으로 개념별 현재 위치를 먼저 잡아요. 0에서 시작하지 않아요.</span></div></div>
+      <div class="whyline"><div class="n">2</div><div>
+        <b>목표 정답률 자동 유지</b><br><span class="muted">매 문항마다 예상 정답률을 계산해, 목표 정답률에 가장 가까운 난이도의 문항을 골라요.</span></div></div>
+      <div class="whyline"><div class="n">3</div><div>
+        <b>80 대 20 세션</b><br><span class="muted">세션 구성은 난이도 설정에 따라 달라져요(안정 12+3 / 도전 11+4 / 가속 9+6).</span></div></div>
+      <div class="whyline"><div class="n">4</div><div>
+        <b>자기 전 5분 카드</b><br><span class="muted">오늘 살짝 헷갈린 것 3개만 뽑아 줘요. 낮에 붙인 표시는 잠자는 동안 굳어요.</span></div></div>
+    </div>
+    <div class="card">
+      <h2>근거</h2>
+      <p class="muted" style="font-size:13px">
+        이해 가능한 입력(i+1) — Stephen Krashen, 1985<br>
+        최적 오류율 85% 규칙 — Wilson 외, Nature Communications, 2019<br>
+        오차 신호와 신경 가소성 · 수면 중 기억 공고화 — Andrew Huberman(스탠퍼드 신경과학) 팟캐스트 정리<br>
+        교육과정 — <span id="src-line">천재교과서 중학교 사회 ①(2022 개정), 2022 개정 사회과 교육과정 성취기준</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 리포트 -->
+  <div id="sc-report" class="hidden">
+    <div class="card bar">
+      <h2>학습 리포트</h2>
+      <div id="rep-body"></div>
+    </div>
+    <div class="card">
+      <h2>AI에게 새 문제 받기</h2>
+      <p class="muted" style="font-size:13px">아래 버튼을 누르면 취약 개념이 담긴 요청문이 복사돼요. AI 채팅에 붙여 넣으면 같은 형식의 새 문항을 받을 수 있어요.</p>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="btn ghost" onclick="copyPrompt()">요청문 복사</button>
+        <button class="btn ghost" onclick="copyState()">기록 내보내기</button>
+      </div>
+      <h3>새 문항 붙여넣기</h3>
+      <p class="muted" style="font-size:13px; margin-bottom:7px">AI가 만든 JSON 배열을 그대로 붙여 넣으세요. 개념 id는 아래 목록 중 하나여야 해요.</p>
+      <textarea id="pasteBox" placeholder='[{"cid":"I-01-1","stem":"...","choices":["...","...","...","..."],"answer":0,"explain":"...","d":0.5,"kind":"적용"}]'></textarea>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="btn ghost" onclick="mergePaste()">문항 추가</button>
+        <button class="btn ghost" onclick="loadState()">기록 불러오기</button>
+      </div>
+      <div id="paste-msg" class="muted" style="margin-top:9px"></div>
+    </div>
+    <div class="card">
+      <h2>기록 초기화</h2>
+      <p class="muted" style="font-size:13px">지금 선택된 학습자의 기록만 지워요. 다른 학습자 기록은 그대로 남아요.</p>
+      <button class="btn ghost" style="margin-top:10px" onclick="resetAll()">이 학습자 기록 지우기</button>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BANK = {"units":[{"id":"S4","title":"4. 물질의 상태 변화","sections":[{"id":"S4-1","title":"4-1. 확산과 증발","concepts":[{"id":"S4-1-1","title":"입자의 운동","tier":1,"known":"교실 앞에서 향수를 뿌려도 뒷자리에서 냄새가 나요. 아무도 냄새를 옮겨 주지 않았는데 말이죠.","fresh":"물질을 이루는 입자는 눈에 보이지 않아도 스스로 끊임없이 운동합니다. 이 운동이 확산과 증발의 출발점입니다.","tip":"설탕 한 스푼을 물에 넣고 젓지 않고 두었다가 보게 하세요.","card":{"key":"입자는 눈에 보이지 않아도 스스로 끊임없이 운동한다","easy":"눈에 안 보여도 알갱이는 계속 움직여요.","why":"입자 스스로 움직이기에 냄새가 저절로 퍼진다.","example":"앞자리에서 뿌린 향수 냄새가 뒷자리까지 퍼지는 것"},"qs":[{"id":"S4-1-1-1","stem":"물질을 이루는 입자의 운동으로 옳은 것은?","choices":["눈에 보이지 않아도 스스로 끊임없이 운동한다","눈에 보일 때만 운동한다","확산이 멈추면 입자도 멈춘다","정지해 있을 때는 운동하지 않는다"],"answer":0,"explain":"입자는 눈에 보이지 않아도 스스로 끊임없이 운동한다.","d":0.26,"kind":"기억","cid":"S4-1-1","qid":"S4-1-1-1","title":"입자의 운동"},{"id":"S4-1-1-2","stem":"입자가 스스로 끊임없이 운동하는 것은 ( )의 출발점이다.","choices":["응고와 액화","밀도와 부피","확산과 증발","무게와 질량"],"answer":2,"explain":"입자의 운동이 확산과 증발의 출발점이 된다.","d":0.44,"kind":"기억","cid":"S4-1-1","qid":"S4-1-1-2","title":"입자의 운동"},{"id":"S4-1-1-3","stem":"입자의 운동으로 설명할 수 있는 현상은?","choices":["쇠못이 물속에 가라앉는다","교실 앞 향수 냄새가 뒷자리까지 퍼진다","유리컵이 떨어져 깨진다","볼펜이 책상 아래로 떨어진다"],"answer":1,"explain":"향수 입자가 스스로 운동해 교실 전체로 퍼지기 때문이다.","d":0.56,"kind":"적용","cid":"S4-1-1","qid":"S4-1-1-3","title":"입자의 운동"},{"id":"S4-1-1-4","stem":"입자의 운동에 대한 설명으로 옳지 않은 것은?","choices":["입자는 눈에 보이지 않는다","입자는 스스로 운동한다","입자의 운동은 확산과 증발의 출발점이다","입자는 확산이 일어날 때만 운동한다"],"answer":3,"explain":"입자는 확산이 일어나지 않을 때도 늘 스스로 운동한다.","d":0.66,"kind":"기억","cid":"S4-1-1","qid":"S4-1-1-4","title":"입자의 운동"},{"id":"S4-1-1-5","stem":"설탕을 물에 넣고 젓지 않았는데 물맛이 단 까닭은?","choices":["컵이 설탕을 대신 녹여 주었기 때문","물이 설탕을 끌어당겨 녹였기 때문","설탕이 물보다 무거워 가라앉았기 때문","설탕 입자가 스스로 운동해 물 전체로 퍼졌기 때문"],"answer":3,"explain":"젓지 않아도 설탕 입자가 스스로 운동해 퍼지기 때문이다.","d":0.76,"kind":"적용","cid":"S4-1-1","qid":"S4-1-1-5","title":"입자의 운동"},{"id":"S4-1-1-6","stem":"향수를 뿌린 뒤 시간이 지날수록 냄새가 진해지는 까닭은?","choices":["향수 입자가 점점 커지기 때문","공기가 냄새를 대신 옮겨 주기 때문","향수 입자가 스스로 운동해 퍼지기 때문","냄새가 스스로 걸어 다니기 때문"],"answer":2,"explain":"향수 입자가 스스로 운동해 공간 전체로 퍼져 나가기 때문이다.","d":0.84,"kind":"추론","cid":"S4-1-1","qid":"S4-1-1-6","title":"입자의 운동"}]},{"id":"S4-1-2","title":"확산","tier":2,"known":"물에 잉크를 한 방울 떨어뜨리면 저절로 퍼져 나가요.","fresh":"확산은 입자가 스스로 운동해 물질이 퍼져 나가는 현상입니다. 온도가 높을수록, 입자가 가벼울수록 빨라지고 기체 > 액체 > 고체 순서입니다.","tip":"찬물과 따뜻한 물에 색소를 각각 넣고 퍼지는 속도를 비교해 보세요.","card":{"key":"확산은 입자가 스스로 운동해 물질이 퍼져 나가는 현상","easy":"색소가 저절로 퍼지는 건 알갱이가 움직이기 때문이에요.","why":"온도가 높고 입자가 가벼울수록 운동이 활발해 빨라진다.","example":"물에 떨어뜨린 잉크 한 방울이 저절로 퍼지는 모습"},"qs":[{"id":"S4-1-2-1","stem":"확산에 대한 설명으로 옳은 것은?","choices":["고체가 녹아 액체로 변하는 현상","입자가 무거워져 가라앉는 현상","액체가 끓어 기체로 변하는 현상","입자가 스스로 운동해 퍼져 나가는 현상"],"answer":3,"explain":"확산은 입자가 스스로 운동해 물질이 퍼져 나가는 현상이다.","d":0.32,"kind":"기억","cid":"S4-1-2","qid":"S4-1-2-1","title":"확산"},{"id":"S4-1-2-2","stem":"확산은 온도가 ( ) 빠르게 일어난다.","choices":["변해도 항상 같게","0도에 가까울수록","높을수록","낮을수록"],"answer":2,"explain":"온도가 높을수록 입자 운동이 활발해 확산이 빨라진다.","d":0.48,"kind":"기억","cid":"S4-1-2","qid":"S4-1-2-2","title":"확산"},{"id":"S4-1-2-3","stem":"확산이 일어난 예로 알맞은 것은?","choices":["물이 얼어 얼음이 된다","얼음이 녹아 물이 된다","물에 떨어뜨린 잉크가 저절로 퍼져 나간다","수증기가 물방울로 맺힌다"],"answer":2,"explain":"잉크 입자가 스스로 운동해 물속으로 퍼져 나가기 때문이다.","d":0.6,"kind":"적용","cid":"S4-1-2","qid":"S4-1-2-3","title":"확산"},{"id":"S4-1-2-4","stem":"확산에 대한 설명으로 옳지 않은 것은?","choices":["기체보다 고체에서 가장 빠르다","입자가 가벼울수록 빠르다","온도가 높을수록 빠르다","액체에서도 일어난다"],"answer":0,"explain":"확산은 고체보다 기체에서 가장 빠르게 일어난다.","d":0.7,"kind":"기억","cid":"S4-1-2","qid":"S4-1-2-4","title":"확산"},{"id":"S4-1-2-5","stem":"따뜻한 물에 넣은 색소가 더 빨리 퍼지는 까닭은?","choices":["따뜻한 물의 색소가 더 무겁기 때문","따뜻한 물이 색소를 끌어당기기 때문","찬물에는 색소가 녹지 않기 때문","온도가 높아 입자 운동이 활발하기 때문"],"answer":3,"explain":"온도가 높을수록 입자 운동이 활발해 확산이 빨라진다.","d":0.79,"kind":"적용","cid":"S4-1-2","qid":"S4-1-2-5","title":"확산"},{"id":"S4-1-2-6","stem":"확산이 기체에서 가장 빠른 까닭은?","choices":["기체 입자가 가장 자유롭게 운동할 수 있기 때문","기체의 온도가 가장 높기 때문","기체 입자가 가장 무겁기 때문","기체 입자가 서로 붙어 있기 때문"],"answer":0,"explain":"기체 입자가 자유롭게 운동해 빠르게 퍼지기 때문이다.","d":0.85,"kind":"추론","cid":"S4-1-2","qid":"S4-1-2-6","title":"확산"}]},{"id":"S4-1-3","title":"증발","tier":2,"known":"빨래가 마르고 물웅덩이가 저절로 사라져요.","fresh":"증발은 액체 표면에서 입자가 떨어져 나가 기체가 되는 현상입니다. 온도가 높고 표면적이 넓고 바람이 셀수록 빨라집니다.","tip":"같은 양의 물을 접시와 컵에 나눠 담아 어느 쪽이 먼저 마르는지 보세요.","card":{"key":"증발은 액체 표면에서 입자가 떨어져 나가 기체가 되는 현상","easy":"물이 표면에서 조금씩 수증기로 날아가는 거예요.","why":"온도가 높고 표면적이 넓고 바람이 셀수록 빨라진다.","example":"햇볕에 널어 둔 빨래가 마르는 모습"},"qs":[{"id":"S4-1-3-1","stem":"증발에 대한 설명으로 옳은 것은?","choices":["기체가 액체로 변하는 현상","고체가 액체로 변하는 현상","액체 내부에서만 일어나는 현상","액체 표면에서 입자가 떨어져 나가 기체가 되는 현상"],"answer":3,"explain":"증발은 액체 표면에서 입자가 떨어져 나가 기체가 되는 현상이다.","d":0.26,"kind":"기억","cid":"S4-1-3","qid":"S4-1-3-1","title":"증발"},{"id":"S4-1-3-2","stem":"증발은 온도가 높을수록, 표면적이 ( ) 빨라진다.","choices":["넓을수록","낮을수록","좁을수록","변해도 같게"],"answer":0,"explain":"온도가 높고 표면적이 넓고 바람이 셀수록 증발이 빨라진다.","d":0.44,"kind":"기억","cid":"S4-1-3","qid":"S4-1-3-2","title":"증발"},{"id":"S4-1-3-3","stem":"증발이 일어난 예로 알맞은 것은?","choices":["얼음이 녹아 물이 된다","냉동실의 물이 얼음이 된다","햇볕에 널어 둔 빨래가 마른다","수증기가 창문에 물방울로 맺힌다"],"answer":2,"explain":"빨래의 물이 표면에서 입자로 떨어져 나가 기체가 되기 때문이다.","d":0.56,"kind":"적용","cid":"S4-1-3","qid":"S4-1-3-3","title":"증발"},{"id":"S4-1-3-4","stem":"증발에 대한 설명으로 옳지 않은 것은?","choices":["액체 표면에서 일어난다","온도가 높을수록 빨라진다","바람이 셀수록 느려진다","액체가 기체로 변하는 현상이다"],"answer":2,"explain":"바람이 셀수록 증발은 더 빨라진다.","d":0.66,"kind":"기억","cid":"S4-1-3","qid":"S4-1-3-4","title":"증발"},{"id":"S4-1-3-5","stem":"같은 양의 물을 접시와 컵에 담았다. 접시가 먼저 마르는 까닭은?","choices":["컵의 물이 더 많기 때문","접시의 물이 더 뜨겁기 때문","접시가 물을 흡수하기 때문","접시는 물의 표면적이 넓기 때문"],"answer":3,"explain":"표면적이 넓을수록 증발이 빨라져 접시가 먼저 마른다.","d":0.76,"kind":"적용","cid":"S4-1-3","qid":"S4-1-3-5","title":"증발"},{"id":"S4-1-3-6","stem":"비가 온 뒤 물웅덩이가 저절로 사라지는 까닭은?","choices":["물이 얼음으로 변하기 때문","물 입자가 떨어져 나가 기체가 되기 때문","땅이 물을 모두 빨아들이기 때문","물이 무거워져 가라앉기 때문"],"answer":1,"explain":"물웅덩이의 물이 표면에서 증발해 기체가 되기 때문이다.","d":0.84,"kind":"추론","cid":"S4-1-3","qid":"S4-1-3-6","title":"증발"}]}]},{"id":"S4-2","title":"4-2. 물질의 상태 변화","concepts":[{"id":"S4-2-1","title":"세 가지 상태의 입자 배열","tier":1,"known":"얼음, 물, 수증기는 모두 같은 물이에요.","fresh":"고체는 입자가 규칙적으로 촘촘히, 액체는 불규칙하지만 서로 가까이, 기체는 아주 멀리 흩어져 있습니다.","tip":"같은 물이 얼음·물·수증기로 변하는 모습을 함께 관찰해 보세요.","card":{"key":"고체는 규칙적·촘촘, 액체는 불규칙·가까이, 기체는 아주 멀리","easy":"상태마다 알갱이가 모여 있는 방식이 달라요.","why":"상태에 따라 입자 사이 거리와 배열이 다르기 때문이다.","example":"얼음·물·수증기에서 입자가 배열된 모습"},"qs":[{"id":"S4-2-1-1","stem":"같은 물이 얼음·물·수증기로 변할 때 입자 배열은?","choices":["얼음이 되면 입자가 작아진다","상태가 변해도 배열은 같다","상태에 따라 배열이 달라진다","수증기가 되면 입자가 커진다"],"answer":2,"explain":"상태가 변하면 입자 자체는 그대로이고 배열만 달라진다.","d":0.26,"kind":"기억","cid":"S4-2-1","qid":"S4-2-1-1","title":"세 가지 상태의 입자 배열"},{"id":"S4-2-1-2","stem":"액체는 입자가 불규칙하지만 서로 ( ) 있다.","choices":["규칙적으로 배열되어","닿지 않게","아주 멀리 떨어져","가까이"],"answer":3,"explain":"액체 입자는 불규칙하지만 서로 가까이 모여 있다.","d":0.44,"kind":"기억","cid":"S4-2-1","qid":"S4-2-1-2","title":"세 가지 상태의 입자 배열"},{"id":"S4-2-1-3","stem":"세 상태의 입자 배열을 비교한 것으로 알맞은 것은?","choices":["세 상태의 입자 배열은 모두 같다","물은 입자가 규칙적으로 촘촘히 배열된다","수증기는 입자 사이 거리가 가장 멀다","얼음은 입자가 불규칙하게 흩어져 있다"],"answer":2,"explain":"기체인 수증기는 입자가 아주 멀리 흩어져 있다.","d":0.56,"kind":"적용","cid":"S4-2-1","qid":"S4-2-1-3","title":"세 가지 상태의 입자 배열"},{"id":"S4-2-1-4","stem":"세 가지 상태의 입자 배열로 옳지 않은 것은?","choices":["고체 입자는 규칙적으로 배열된다","기체 입자는 규칙적으로 촘촘히 모여 있다","액체 입자는 서로 가까이 있다","기체 입자는 아주 멀리 흩어져 있다"],"answer":1,"explain":"기체 입자는 규칙적이지 않고 아주 멀리 흩어져 있다.","d":0.66,"kind":"기억","cid":"S4-2-1","qid":"S4-2-1-4","title":"세 가지 상태의 입자 배열"},{"id":"S4-2-1-5","stem":"컵에 담긴 물과 그 위의 수증기를 비교한 설명으로 옳은 것은?","choices":["두 상태의 입자 배열이 같다","물 입자가 수증기 입자보다 멀리 떨어져 있다","수증기 입자가 물 입자보다 멀리 떨어져 있다","수증기 입자는 규칙적으로 배열된다"],"answer":2,"explain":"기체인 수증기의 입자 사이 거리가 액체인 물보다 멀다.","d":0.76,"kind":"적용","cid":"S4-2-1","qid":"S4-2-1-5","title":"세 가지 상태의 입자 배열"},{"id":"S4-2-1-6","stem":"기체가 용기 모양대로 퍼지는 까닭은?","choices":["기체 입자가 서로 붙어 있기 때문","기체 입자가 무겁기 때문","기체 입자 사이 거리가 아주 멀기 때문","기체 입자가 규칙적으로 배열되기 때문"],"answer":2,"explain":"기체 입자가 아주 멀리 흩어져 자유롭게 퍼지기 때문이다.","d":0.84,"kind":"추론","cid":"S4-2-1","qid":"S4-2-1-6","title":"세 가지 상태의 입자 배열"}]},{"id":"S4-2-2","title":"여섯 가지 상태 변화","tier":1,"known":"얼음이 녹고 물이 어는 것을 매일 봐요.","fresh":"융해(고체→액체), 응고(액체→고체), 기화(액체→기체), 액화(기체→액체), 승화(고체↔기체) 여섯 가지로 나눠 부릅니다.","tip":"성에가 사라지거나 드라이아이스가 줄어드는 모습에서 승화를 찾아보세요.","card":{"key":"여섯 가지 상태 변화: 융해·응고·기화·액화·승화(고체↔기체)","easy":"변하는 방향에 따라 이름이 달라요.","why":"고체↔액체, 액체↔기체, 고체↔기체 사이 변화로 나뉜다.","example":"드라이아이스가 줄어들며 사라지는 승화"},"qs":[{"id":"S4-2-2-1","stem":"고체가 액체로 변하는 상태 변화의 이름은?","choices":["승화","융해","응고","액화"],"answer":1,"explain":"고체가 액체로 변하는 것을 융해라고 한다.","d":0.32,"kind":"기억","cid":"S4-2-2","qid":"S4-2-2-1","title":"여섯 가지 상태 변화"},{"id":"S4-2-2-2","stem":"기체가 액체로 변하는 상태 변화를 ( )(이)라고 한다.","choices":["기화","융해","액화","응고"],"answer":2,"explain":"기체가 액체로 변하는 것을 액화라고 한다.","d":0.48,"kind":"기억","cid":"S4-2-2","qid":"S4-2-2-2","title":"여섯 가지 상태 변화"},{"id":"S4-2-2-3","stem":"승화가 일어난 예로 알맞은 것은?","choices":["드라이아이스가 줄어들며 사라진다","수증기가 물방울로 맺힌다","얼음이 녹아 물이 된다","물이 얼어 얼음이 된다"],"answer":0,"explain":"드라이아이스가 고체에서 기체로 바로 변하는 것이 승화이다.","d":0.6,"kind":"적용","cid":"S4-2-2","qid":"S4-2-2-3","title":"여섯 가지 상태 변화"},{"id":"S4-2-2-4","stem":"여섯 가지 상태 변화로 옳지 않은 것은?","choices":["융해는 고체가 액체로 변하는 것","승화는 액체가 기체로 변하는 것","응고는 액체가 고체로 변하는 것","액화는 기체가 액체로 변하는 것"],"answer":1,"explain":"승화는 고체와 기체 사이에서 일어나는 상태 변화이다.","d":0.7,"kind":"기억","cid":"S4-2-2","qid":"S4-2-2-4","title":"여섯 가지 상태 변화"},{"id":"S4-2-2-5","stem":"얼었던 빨래가 물이 되지 않고 그대로 마르는 까닭은?","choices":["고체가 기체로 바로 변하는 승화가 일어나기 때문","고체가 액체로 변하는 융해가 일어나기 때문","액체가 기체로 변하는 기화가 일어나기 때문","기체가 액체로 변하는 액화가 일어나기 때문"],"answer":0,"explain":"얼음이 물을 거치지 않고 기체로 바로 변하는 승화가 일어난다.","d":0.79,"kind":"적용","cid":"S4-2-2","qid":"S4-2-2-5","title":"여섯 가지 상태 변화"},{"id":"S4-2-2-6","stem":"물이 어는 것과 얼음이 녹는 것의 관계로 옳은 것은?","choices":["둘 다 열에너지를 흡수하는 변화이다","서로 반대 방향의 상태 변화이다","둘 다 기체가 되는 변화이다","둘 다 같은 이름의 상태 변화이다"],"answer":1,"explain":"응고와 융해는 서로 반대 방향의 상태 변화이다.","d":0.85,"kind":"추론","cid":"S4-2-2","qid":"S4-2-2-6","title":"여섯 가지 상태 변화"}]},{"id":"S4-2-3","title":"상태 변화와 입자 배열·부피","tier":2,"known":"얼음은 물 위에 떠요. 물이 얼면 부피가 늘어나기 때문이에요.","fresh":"상태가 변해도 입자 자체는 변하지 않고 배열만 달라지며, 입자 사이 거리가 멀어질수록 부피가 커집니다. 물은 어는 과정에서 부피가 늘어나는 예외입니다.","tip":"페트병에 물을 가득 채워 얼려 부피가 어떻게 되는지 보세요.","card":{"key":"상태가 변해도 입자는 그대로, 배열만 달라져 부피가 변한다","easy":"알갱이는 그대로인데 사이 거리가 달라져요.","why":"입자 사이 거리가 멀어질수록 부피가 커지기 때문이다.","example":"물을 가득 채운 페트병을 얼리면 병이 부푸는 것"},"qs":[{"id":"S4-2-3-1","stem":"상태 변화가 일어날 때 입자는 어떻게 되는가?","choices":["입자 자체는 변하지 않고 배열만 달라진다","입자가 사라졌다가 새로 생긴다","입자의 종류가 바뀐다","입자의 크기가 점점 커진다"],"answer":0,"explain":"상태 변화에서는 입자 자체는 그대로이고 배열만 달라진다.","d":0.26,"kind":"기억","cid":"S4-2-3","qid":"S4-2-3-1","title":"상태 변화와 입자 배열·부피"},{"id":"S4-2-3-2","stem":"입자 사이 거리가 멀어질수록 부피는 ( ).","choices":["0이 된다","커진다","변하지 않는다","작아진다"],"answer":1,"explain":"입자 사이 거리가 멀어질수록 부피가 커진다.","d":0.44,"kind":"기억","cid":"S4-2-3","qid":"S4-2-3-2","title":"상태 변화와 입자 배열·부피"},{"id":"S4-2-3-3","stem":"물이 얼 때 부피가 늘어난 예로 알맞은 것은?","choices":["얼음이 물속에 가라앉는다","물이 수증기가 되면 부피가 줄어든다","초콜릿이 녹아도 부피가 그대로다","페트병에 물을 가득 채워 얼리면 병이 부푼다"],"answer":3,"explain":"물은 어는 과정에서 부피가 늘어나는 예외이다.","d":0.56,"kind":"적용","cid":"S4-2-3","qid":"S4-2-3-3","title":"상태 변화와 입자 배열·부피"},{"id":"S4-2-3-4","stem":"상태 변화와 부피에 대한 설명으로 옳지 않은 것은?","choices":["상태가 변해도 입자 자체는 변하지 않는다","입자 사이 거리가 멀수록 부피가 크다","물이 어는 과정에서 부피가 줄어든다","물이 얼면 부피가 늘어난다"],"answer":2,"explain":"물은 어는 과정에서 부피가 늘어나는 예외에 해당한다.","d":0.66,"kind":"기억","cid":"S4-2-3","qid":"S4-2-3-4","title":"상태 변화와 입자 배열·부피"},{"id":"S4-2-3-5","stem":"얼음이 물 위에 뜨는 까닭은?","choices":["얼음 입자가 물 입자보다 가볍기 때문","물이 얼면서 부피가 늘어나기 때문","얼음이 물을 밀어내기 때문","얼음이 물보다 따뜻하기 때문"],"answer":1,"explain":"물이 얼면서 부피가 늘어나 얼음이 물 위에 뜬다.","d":0.76,"kind":"적용","cid":"S4-2-3","qid":"S4-2-3-5","title":"상태 변화와 입자 배열·부피"},{"id":"S4-2-3-6","stem":"얼음이 녹아 물이 되어도 여전히 물인 까닭은?","choices":["입자의 종류와 성질이 그대로이기 때문","입자 배열이 그대로이기 때문","입자가 모두 사라지기 때문","입자가 새로 만들어지기 때문"],"answer":0,"explain":"상태가 변해도 입자의 종류와 성질은 그대로이기 때문이다.","d":0.84,"kind":"추론","cid":"S4-2-3","qid":"S4-2-3-6","title":"상태 변화와 입자 배열·부피"}]},{"id":"S4-2-4","title":"상태 변화는 물리적 변화","tier":3,"known":"얼음이 녹았다가 다시 얼려도 여전히 물이에요.","fresh":"상태 변화는 입자 배열만 바뀌고 입자의 종류와 성질은 그대로이므로 물리적 변화입니다.","tip":"초콜릿을 녹였다가 굳혀도 초콜릿인지 확인해 보세요.","card":{"key":"상태 변화는 입자 종류가 그대로인 물리적 변화","easy":"녹아도 다시 얼리면 여전히 같은 물질이에요.","why":"입자의 종류와 성질이 변하지 않기 때문이다.","example":"초콜릿을 녹였다가 굳혀도 초콜릿인 것"},"qs":[{"id":"S4-2-4-1","stem":"상태 변화는 어떤 변화에 속하는가?","choices":["물질의 성질이 완전히 달라지는 변화","물질이 없어지는 변화","입자의 종류가 바뀌는 화학적 변화","입자 배열만 바뀌는 물리적 변화"],"answer":3,"explain":"상태 변화는 입자 배열만 바뀌므로 물리적 변화이다.","d":0.32,"kind":"기억","cid":"S4-2-4","qid":"S4-2-4-1","title":"상태 변화는 물리적 변화"},{"id":"S4-2-4-2","stem":"상태 변화에서는 입자의 ( )과 ( )이 그대로이다.","choices":["모양, 색","배열, 거리","개수, 부피","종류, 성질"],"answer":3,"explain":"상태 변화에서도 입자의 종류와 성질은 변하지 않는다.","d":0.48,"kind":"기억","cid":"S4-2-4","qid":"S4-2-4-2","title":"상태 변화는 물리적 변화"},{"id":"S4-2-4-3","stem":"물리적 변화에 해당하는 예로 알맞은 것은?","choices":["초콜릿이 녹았다가 굳는다","나무가 타서 숯이 된다","종이가 타서 재가 된다","쇠못이 녹슨다"],"answer":0,"explain":"초콜릿은 상태만 변할 뿐 여전히 초콜릿이므로 물리적 변화이다.","d":0.6,"kind":"적용","cid":"S4-2-4","qid":"S4-2-4-3","title":"상태 변화는 물리적 변화"},{"id":"S4-2-4-4","stem":"상태 변화에 대한 설명으로 옳지 않은 것은?","choices":["입자 배열이 달라진다","입자의 성질은 그대로이다","물리적 변화에 해당한다","입자의 종류가 다른 물질로 바뀐다"],"answer":3,"explain":"상태 변화에서는 입자의 종류가 바뀌지 않는다.","d":0.7,"kind":"기억","cid":"S4-2-4","qid":"S4-2-4-4","title":"상태 변화는 물리적 변화"},{"id":"S4-2-4-5","stem":"초콜릿을 녹였다가 냉장고에 굳혔다. 옳은 설명은?","choices":["여전히 초콜릿이므로 물리적 변화이다","초콜릿 입자가 새로 생겼다","다른 물질이 되었으므로 화학적 변화이다","초콜릿의 성질이 완전히 달라졌다"],"answer":0,"explain":"녹았다 굳어도 초콜릿이므로 입자 종류가 그대로인 물리적 변화이다.","d":0.79,"kind":"적용","cid":"S4-2-4","qid":"S4-2-4-5","title":"상태 변화는 물리적 변화"},{"id":"S4-2-4-6","stem":"상태 변화를 화학적 변화와 구분하는 까닭은?","choices":["온도가 변하지 않기 때문","색이 변하지 않기 때문","부피가 변하지 않기 때문","입자의 종류가 바뀌지 않기 때문"],"answer":3,"explain":"입자의 종류와 성질이 그대로이므로 화학적 변화와 구분된다.","d":0.85,"kind":"추론","cid":"S4-2-4","qid":"S4-2-4-6","title":"상태 변화는 물리적 변화"}]}]},{"id":"S4-3","title":"4-3. 상태 변화와 열에너지","concepts":[{"id":"S4-3-1","title":"열에너지의 흡수와 방출","tier":2,"known":"손난로를 만지면 따뜻해지고, 땀을 흘리면 시원해져요.","fresh":"융해·기화·승화는 열에너지를 흡수하고, 응고·액화는 열에너지를 방출합니다.","tip":"더울 때 땀이 마르며 시원해지는 까닭을 함께 이야기해 보세요.","card":{"key":"융해·기화·승화는 열 흡수, 응고·액화는 열 방출","easy":"상태가 변할 때 열을 가져가거나 내놓아요.","why":"입자 배열이 바뀌면서 열에너지가 오가기 때문이다.","example":"땀이 마르며 몸이 시원해지는 것"},"qs":[{"id":"S4-3-1-1","stem":"열에너지를 흡수하는 상태 변화로 옳은 것은?","choices":["여섯 가지 모두","응고와 융해","응고와 액화","융해, 기화, 승화"],"answer":3,"explain":"융해·기화·승화는 열에너지를 흡수한다.","d":0.26,"kind":"기억","cid":"S4-3-1","qid":"S4-3-1-1","title":"열에너지의 흡수와 방출"},{"id":"S4-3-1-2","stem":"응고와 액화는 열에너지를 ( ).","choices":["흡수도 방출도 하지 않는다","흡수한다","두 배로 흡수한다","방출한다"],"answer":3,"explain":"응고와 액화는 열에너지를 방출한다.","d":0.44,"kind":"기억","cid":"S4-3-1","qid":"S4-3-1-2","title":"열에너지의 흡수와 방출"},{"id":"S4-3-1-3","stem":"주변의 열을 흡수하는 상태 변화의 예로 알맞은 것은?","choices":["수증기가 물방울로 맺힌다","물이 얼면서 주변을 따뜻하게 한다","얼음이 녹으면서 주변의 열을 가져간다","따뜻한 물이 식는다"],"answer":2,"explain":"융해는 열에너지를 흡수하므로 주변의 열을 가져간다.","d":0.56,"kind":"적용","cid":"S4-3-1","qid":"S4-3-1-3","title":"열에너지의 흡수와 방출"},{"id":"S4-3-1-4","stem":"열에너지의 흡수와 방출로 옳지 않은 것은?","choices":["응고는 열에너지를 흡수한다","기화는 열에너지를 흡수한다","융해는 열에너지를 흡수한다","액화는 열에너지를 방출한다"],"answer":0,"explain":"응고는 액체가 고체로 변하며 열에너지를 방출한다.","d":0.66,"kind":"기억","cid":"S4-3-1","qid":"S4-3-1-4","title":"열에너지의 흡수와 방출"},{"id":"S4-3-1-5","stem":"더울 때 땀이 마르면 시원해지는 까닭은?","choices":["땀이 몸을 덮어 주기 때문","땀이 액화하며 열을 흡수하기 때문","땀이 기화하며 몸의 열을 흡수하기 때문","땀이 응고하며 열을 내보내기 때문"],"answer":2,"explain":"땀이 기화할 때 몸의 열에너지를 흡수해 시원해진다.","d":0.76,"kind":"적용","cid":"S4-3-1","qid":"S4-3-1-5","title":"열에너지의 흡수와 방출"},{"id":"S4-3-1-6","stem":"수증기가 물방울로 맺힐 때 주변은 어떻게 되는가?","choices":["승화가 열을 흡수해 주변이 차가워진다","열의 출입이 없어 변화가 없다","기화가 열을 흡수해 주변이 차가워진다","액화가 열을 방출해 주변이 따뜻해진다"],"answer":3,"explain":"액화는 열에너지를 방출하므로 주변이 따뜻해진다.","d":0.84,"kind":"추론","cid":"S4-3-1","qid":"S4-3-1-6","title":"열에너지의 흡수와 방출"}]},{"id":"S4-3-2","title":"온도-시간 그래프의 평평한 구간","tier":3,"known":"물을 끓일 때 온도계가 100도에서 더 올라가지 않아요.","fresh":"상태 변화가 일어나는 동안 흡수한 열에너지가 입자 배열을 바꾸는 데 쓰이므로 온도가 일정하게 유지됩니다.","tip":"얼음이 녹는 동안 온도계가 0도에 머무는 것을 함께 확인해 보세요.","card":{"key":"상태 변화 동안 흡수한 열은 배열을 바꾸는 데 쓰여 온도가 일정","easy":"변하는 동안에는 온도계가 멈춘 것처럼 보여요.","why":"흡수한 열이 입자 배열을 바꾸는 데 쓰이기 때문이다.","example":"얼음이 녹는 동안 온도계가 0도에 머무는 것"},"qs":[{"id":"S4-3-2-1","stem":"상태 변화가 일어나는 동안 온도가 일정한 까닭은?","choices":["입자의 운동이 멈추기 때문","열을 전혀 흡수하지 않기 때문","온도계가 상태 변화 때 고장 나기 때문","흡수한 열에너지가 입자 배열을 바꾸는 데 쓰이기 때문"],"answer":3,"explain":"흡수한 열에너지가 입자 배열을 바꾸는 데 쓰여 온도가 일정하다.","d":0.32,"kind":"기억","cid":"S4-3-2","qid":"S4-3-2-1","title":"온도-시간 그래프의 평평한 구간"},{"id":"S4-3-2-2","stem":"상태 변화가 일어나는 동안 그래프는 ( ) 구간으로 나타난다.","choices":["계속 내려가는","계속 올라가는","물결치는","평평한"],"answer":3,"explain":"상태 변화가 일어나는 동안 온도가 일정해 그래프가 평평하다.","d":0.48,"kind":"기억","cid":"S4-3-2","qid":"S4-3-2-2","title":"온도-시간 그래프의 평평한 구간"},{"id":"S4-3-2-3","stem":"온도-시간 그래프가 평평해지는 때는?","choices":["얼음이 모두 녹은 뒤 계속 가열할 때","얼음이 녹는 동안","물이 식고 있을 때","물을 가열하기만 할 때"],"answer":1,"explain":"얼음이 녹는 동안 온도가 0도로 유지되어 그래프가 평평하다.","d":0.6,"kind":"적용","cid":"S4-3-2","qid":"S4-3-2-3","title":"온도-시간 그래프의 평평한 구간"},{"id":"S4-3-2-4","stem":"상태 변화와 온도에 대한 설명으로 옳지 않은 것은?","choices":["얼음이 녹는 동안 온도는 0도로 유지된다","상태 변화 동안에도 온도는 계속 올라간다","물이 끓는 동안 온도는 100도로 유지된다","상태 변화 동안 흡수한 열은 입자 배열을 바꾸는 데 쓰인다"],"answer":1,"explain":"상태 변화 동안에는 온도가 일정하게 유지된다.","d":0.7,"kind":"기억","cid":"S4-3-2","qid":"S4-3-2-4","title":"온도-시간 그래프의 평평한 구간"},{"id":"S4-3-2-5","stem":"얼음이 녹는 동안 온도계가 0도에 머문 까닭은?","choices":["녹는 데 쓰인 열이 온도를 올리지 않았기 때문","얼음이 열을 내보냈기 때문","얼음이 더 이상 열을 받지 않았기 때문","온도계가 얼음에 닿지 않았기 때문"],"answer":0,"explain":"받은 열에너지가 얼음을 녹이는 데 쓰여 온도가 오르지 않는다.","d":0.79,"kind":"적용","cid":"S4-3-2","qid":"S4-3-2-5","title":"온도-시간 그래프의 평평한 구간"},{"id":"S4-3-2-6","stem":"물을 오래 끓여도 100도보다 올라가지 않는 까닭은?","choices":["물이 열을 모두 반사하기 때문","끓는 동안 흡수한 열이 기화에 쓰이기 때문","물의 양이 계속 줄어들기 때문","불꽃의 온도가 100도이기 때문"],"answer":1,"explain":"끓는 동안 흡수한 열에너지가 기화에 쓰여 온도가 오르지 않는다.","d":0.85,"kind":"추론","cid":"S4-3-2","qid":"S4-3-2-6","title":"온도-시간 그래프의 평평한 구간"}]},{"id":"S4-3-3","title":"융해열과 기화열","tier":3,"known":"끓는 물도 100도, 녹는 얼음도 0도예요.","fresh":"상태 변화에 필요한 열량은 물질 1g당으로 나타내며, 같은 물질이라도 기화열이 융해열보다 훨씬 큽니다.","tip":"'왜 끓는 물에 더 심하게 데일까'를 함께 따져보세요.","card":{"key":"상태 변화에 드는 열량은 물질 1g당으로 나타낸다","easy":"같은 물질도 끓이는 데 열이 훨씬 많이 들어요.","why":"같은 물질에서 기화열이 융해열보다 훨씬 크기 때문이다.","example":"뜨거운 김에 끓는 물보다 심하게 데는 것"},"qs":[{"id":"S4-3-3-1","stem":"물질 1g이 상태 변화 하는 데 필요한 열량을 나타낸 것은?","choices":["밀도와 압력","질량과 무게","온도와 부피","융해열과 기화열"],"answer":3,"explain":"상태 변화에 필요한 열량을 1g당으로 나타낸 것이 융해열과 기화열이다.","d":0.26,"kind":"기억","cid":"S4-3-3","qid":"S4-3-3-1","title":"융해열과 기화열"},{"id":"S4-3-3-2","stem":"같은 물질이라도 기화열은 융해열보다 ( ).","choices":["항상 같다","항상 0이다","훨씬 작다","훨씬 크다"],"answer":3,"explain":"같은 물질에서 기화열이 융해열보다 훨씬 크다.","d":0.44,"kind":"기억","cid":"S4-3-3","qid":"S4-3-3-2","title":"융해열과 기화열"},{"id":"S4-3-3-3","stem":"같은 질량일 때 두 변화에 필요한 열량을 비교한 것으로 옳은 것은?","choices":["두 경우 모두 열량이 들지 않는다","두 경우에 드는 열량이 같다","얼음을 녹이는 데 더 많은 열량이 든다","물을 끓여 수증기로 만드는 데 더 많은 열량이 든다"],"answer":3,"explain":"기화열이 융해열보다 훨씬 커서 기화에 더 많은 열량이 든다.","d":0.56,"kind":"적용","cid":"S4-3-3","qid":"S4-3-3-3","title":"융해열과 기화열"},{"id":"S4-3-3-4","stem":"융해열과 기화열에 대한 설명으로 옳지 않은 것은?","choices":["같은 물질에서 기화열이 융해열보다 크다","물질 1g당 필요한 열량으로 나타낸다","융해열이 기화열보다 항상 크다","끓는 물은 100도, 녹는 얼음은 0도이다"],"answer":2,"explain":"같은 물질에서는 기화열이 융해열보다 훨씬 크다.","d":0.66,"kind":"기억","cid":"S4-3-3","qid":"S4-3-3-4","title":"융해열과 기화열"},{"id":"S4-3-3-5","stem":"뜨거운 김에 데면 끓는 물보다 더 아픈 까닭은?","choices":["수증기의 온도가 끓는 물보다 훨씬 높기 때문","수증기가 열을 흡수하기 때문","수증기가 물보다 무겁기 때문","수증기가 액화하며 큰 기화열을 내놓기 때문"],"answer":3,"explain":"수증기가 액화할 때 큰 기화열을 방출해 더 뜨겁게 느껴진다.","d":0.76,"kind":"적용","cid":"S4-3-3","qid":"S4-3-3-5","title":"융해열과 기화열"},{"id":"S4-3-3-6","stem":"융해열과 기화열을 1g당 열량으로 나타내는 까닭은?","choices":["색을 비교하기 위해","온도를 정확히 알기 위해","부피를 재기 위해","물질의 양에 관계없이 비교하기 위해"],"answer":3,"explain":"물질의 양에 관계없이 상태 변화에 드는 열량을 비교하기 위해서이다.","d":0.84,"kind":"추론","cid":"S4-3-3","qid":"S4-3-3-6","title":"융해열과 기화열"}]},{"id":"S4-3-4","title":"상태 변화와 열에너지의 이용","tier":2,"known":"아이스팩을 대면 시원하고 냉장고가 음식을 차갑게 해요.","fresh":"기화할 때 주변의 열을 흡수하는 성질을 이용해 온도를 낮춥니다. 아이스팩·냉장고·증발 냉각이 그 예입니다.","tip":"냉장고 뒤쪽이 따뜻한 까닭을 함께 찾아보세요.","card":{"key":"기화할 때 주변의 열을 흡수해 온도를 낮추는 원리","easy":"물이 날아가면서 주변 열을 가져가 시원해져요.","why":"기화가 주변의 열을 흡수하기 때문이다.","example":"운동장에 물을 뿌리면 시원해지는 것"},"qs":[{"id":"S4-3-4-1","stem":"상태 변화를 이용해 온도를 낮추는 원리로 옳은 것은?","choices":["승화할 때 주변의 열을 방출한다","응고할 때 주변의 열을 흡수한다","기화할 때 주변의 열을 흡수한다","액화할 때 주변의 열을 흡수한다"],"answer":2,"explain":"기화할 때 주변의 열을 흡수하는 성질로 온도를 낮춘다.","d":0.32,"kind":"기억","cid":"S4-3-4","qid":"S4-3-4-1","title":"상태 변화와 열에너지의 이용"},{"id":"S4-3-4-2","stem":"아이스팩은 ( )할 때 주변의 열을 흡수해 시원해진다.","choices":["액화","융해","기화","응고"],"answer":2,"explain":"아이스팩은 기화할 때 주변의 열을 흡수하는 원리를 이용한다.","d":0.48,"kind":"기억","cid":"S4-3-4","qid":"S4-3-4-2","title":"상태 변화와 열에너지의 이용"},{"id":"S4-3-4-3","stem":"기화열을 이용해 온도를 낮추는 예로 알맞은 것은?","choices":["전기장판으로 이불을 데운다","난로를 켜서 방을 따뜻하게 한다","물을 뿌려 증발 냉각으로 온도를 낮춘다","뜨거운 물수건으로 찜질한다"],"answer":2,"explain":"물이 기화하며 주변의 열을 흡수해 온도가 낮아진다.","d":0.6,"kind":"적용","cid":"S4-3-4","qid":"S4-3-4-3","title":"상태 변화와 열에너지의 이용"},{"id":"S4-3-4-4","stem":"상태 변화와 열에너지 이용으로 옳지 않은 것은?","choices":["기화할 때 주변의 열을 흡수한다","냉장고는 기화할 때 열을 방출해 음식을 차갑게 한다","물이 증발하며 주변 온도를 낮출 수 있다","아이스팩은 기화를 이용해 시원해진다"],"answer":1,"explain":"냉장고는 기화할 때 열을 흡수하는 성질을 이용한다.","d":0.7,"kind":"기억","cid":"S4-3-4","qid":"S4-3-4-4","title":"상태 변화와 열에너지의 이용"},{"id":"S4-3-4-5","stem":"한여름 운동장에 물을 뿌리면 시원해지는 까닭은?","choices":["물이 기화하며 주변의 열을 빼앗기 때문","물이 얼음으로 변하기 때문","물이 액화하며 열을 흡수하기 때문","물이 응고하며 열을 내보내기 때문"],"answer":0,"explain":"물이 기화할 때 주변의 열을 빼앗아 온도가 낮아진다.","d":0.79,"kind":"적용","cid":"S4-3-4","qid":"S4-3-4-5","title":"상태 변화와 열에너지의 이용"},{"id":"S4-3-4-6","stem":"냉장고 뒤쪽이 따뜻한 까닭은?","choices":["차가운 공기가 뒤쪽으로 모이기 때문","기체가 액화하며 열을 방출하기 때문","기체가 기화하며 열을 흡수하기 때문","음식이 열을 내보내기 때문"],"answer":1,"explain":"기체가 액화하며 열을 방출해 뒤쪽이 따뜻해진다.","d":0.85,"kind":"추론","cid":"S4-3-4","qid":"S4-3-4-6","title":"상태 변화와 열에너지의 이용"}]}]}]},{"id":"S5","title":"5. 힘의 작용","sections":[{"id":"S5-1","title":"5-1. 힘의 표현과 합성","concepts":[{"id":"S5-1-1","title":"힘의 뜻과 단위","tier":1,"known":"'힘을 줘서 문을 밀었다'처럼 일상에서 힘이라는 말을 써요.","fresh":"과학에서 힘은 물체의 운동 상태나 모양을 변화시키는 원인이고, 단위는 N(뉴턴)입니다.","tip":"집에서 물건을 밀고 당기며 운동·모양이 변하는 경우를 찾아보세요.","card":{"key":"힘 = 물체의 운동 상태나 모양을 바꾸는 원인","easy":"물체의 운동이나 모양을 바꾸는 원인이에요.","why":"힘을 받으면 운동 상태나 모양이 변하기 때문이에요.","example":"공을 발로 차면 공이 움직여요."},"qs":[{"id":"S5-1-1-1","stem":"과학에서 힘은 무엇인가?","choices":["물체가 가진 열의 양","물체가 차지하는 공간의 크기","물체의 운동 상태나 모양을 변화시키는 원인","물체를 이루는 입자의 수"],"answer":2,"explain":"힘은 물체의 운동 상태나 모양을 변화시키는 원인이에요.","d":0.26,"kind":"기억","cid":"S5-1-1","qid":"S5-1-1-1","title":"힘의 뜻과 단위"},{"id":"S5-1-1-2","stem":"힘의 크기를 나타내는 단위는?","choices":["도(섭씨)","N(뉴턴)","g(그램)","L(리터)"],"answer":1,"explain":"과학에서 힘의 크기는 N(뉴턴)이라는 단위로 나타내요.","d":0.44,"kind":"기억","cid":"S5-1-1","qid":"S5-1-1-2","title":"힘의 뜻과 단위"},{"id":"S5-1-1-3","stem":"힘을 받아 물체의 모양이 변한 경우는?","choices":["시계 바늘이 규칙적으로 돈다","공이 굴러가다 멈춘다","고무풍선을 누르니 찌그러진다","책상 위 책이 가만히 있다"],"answer":2,"explain":"누르는 힘을 받아 풍선의 모양이 변했어요.","d":0.56,"kind":"적용","cid":"S5-1-1","qid":"S5-1-1-3","title":"힘의 뜻과 단위"},{"id":"S5-1-1-4","stem":"힘에 대한 설명으로 옳지 않은 것은?","choices":["힘은 크기만 있고 방향은 없다","힘은 물체의 모양을 변화시킨다","힘의 단위는 N(뉴턴)이다","힘은 물체의 운동 상태를 변화시킨다"],"answer":0,"explain":"힘은 크기와 방향을 함께 가진 양이에요.","d":0.66,"kind":"적용","cid":"S5-1-1","qid":"S5-1-1-4","title":"힘의 뜻과 단위"},{"id":"S5-1-1-5","stem":"자전거 브레이크를 잡으면 자전거가 멈춘다. 이는?","choices":["힘이 자전거의 질량을 줄였기 때문","힘이 자전거의 온도를 낮추었기 때문","힘이 자전거의 운동 상태를 바꾸었기 때문","힘의 방향이 없기 때문"],"answer":2,"explain":"브레이크의 힘이 운동 상태를 바꾸어 자전거가 멈추었어요.","d":0.76,"kind":"적용","cid":"S5-1-1","qid":"S5-1-1-5","title":"힘의 뜻과 단위"},{"id":"S5-1-1-6","stem":"힘을 주었는데 아무 변화도 없었다. 까닭은?","choices":["준 힘들이 서로 상쇄되어 알짜힘이 0이었다","물체가 단단해서 힘이 사라졌다","힘은 원래 물체를 변하게 하지 못한다","힘의 단위가 달라서 힘이 약해졌다"],"answer":0,"explain":"여러 힘이 서로 상쇄되어 알짜힘이 0이면 운동 상태가 변하지 않아요.","d":0.84,"kind":"추론","cid":"S5-1-1","qid":"S5-1-1-6","title":"힘의 뜻과 단위"}]},{"id":"S5-1-2","title":"힘의 삼요소와 화살표 표현","tier":1,"known":"문을 경첩 쪽에서 미는 것보다 손잡이 쪽에서 미는 것이 쉬워요.","fresh":"힘의 크기·방향·작용점을 삼요소라 하고, 화살표의 길이로 크기, 화살표 방향으로 방향, 시작점으로 작용점을 나타냅니다.","tip":"문 손잡이와 경첩 쪽을 각각 밀어보며 느낌이 다른 까닭을 이야기해 보세요.","card":{"key":"힘의 삼요소 = 크기·방향·작용점","easy":"힘은 크기, 방향, 작용점으로 나타내요.","why":"어디에 어떤 방향으로 주는지에 따라 결과가 달라져요.","example":"손잡이를 밀면 문이 쉽게 열려요."},"qs":[{"id":"S5-1-2-1","stem":"힘의 삼요소로 알맞은 것은?","choices":["크기, 방향, 작용점","크기, 무게, 부피","방향, 속력, 질량","작용점, 온도, 시간"],"answer":0,"explain":"힘은 크기, 방향, 작용점의 삼요소로 나타내요.","d":0.32,"kind":"기억","cid":"S5-1-2","qid":"S5-1-2-1","title":"힘의 삼요소와 화살표 표현"},{"id":"S5-1-2-2","stem":"힘을 화살표로 나타낼 때 화살표의 길이는?","choices":["힘의 방향","힘의 크기","힘의 속력","힘의 작용점"],"answer":1,"explain":"화살표의 길이로 힘의 크기를 나타내요.","d":0.48,"kind":"기억","cid":"S5-1-2","qid":"S5-1-2-2","title":"힘의 삼요소와 화살표 표현"},{"id":"S5-1-2-3","stem":"힘을 화살표로 나타낼 때 시작점이 뜻하는 것은?","choices":["힘의 작용점","힘의 크기","힘의 방향","힘의 종류"],"answer":0,"explain":"화살표의 시작점은 힘이 작용하는 점을 나타내요.","d":0.6,"kind":"적용","cid":"S5-1-2","qid":"S5-1-2-3","title":"힘의 삼요소와 화살표 표현"},{"id":"S5-1-2-4","stem":"힘의 화살표 표현 설명으로 옳지 않은 것은?","choices":["화살표의 색으로 힘의 크기를 나타낸다","화살표의 방향으로 힘의 방향을 나타낸다","화살표의 시작점으로 작용점을 나타낸다","화살표의 길이로 힘의 크기를 나타낸다"],"answer":0,"explain":"힘의 크기는 화살표의 색이 아니라 길이로 나타내요.","d":0.7,"kind":"적용","cid":"S5-1-2","qid":"S5-1-2-4","title":"힘의 삼요소와 화살표 표현"},{"id":"S5-1-2-5","stem":"손잡이를 미는 것이 경첩 쪽을 미는 것보다 쉬운 까닭은?","choices":["손잡이 쪽에서 힘의 단위가 바뀌기 때문","작용점이 경첩에서 멀어 회전 효과가 크기 때문","손잡이 쪽 힘의 방향이 달라지기 때문","손잡이 쪽에서 문의 질량이 작아지기 때문"],"answer":1,"explain":"작용점이 경첩에서 멀수록 같은 힘으로도 문이 쉽게 돌아가요.","d":0.79,"kind":"적용","cid":"S5-1-2","qid":"S5-1-2-5","title":"힘의 삼요소와 화살표 표현"},{"id":"S5-1-2-6","stem":"같은 크기로 문을 밀어도 결과가 달라지는 까닭은?","choices":["힘의 크기는 변하지 않기 때문","문이 저절로 움직이기 때문","작용점이 달라지면 미치는 효과가 달라져서","문의 색이 달라지기 때문"],"answer":2,"explain":"힘의 삼요소 중 작용점이 달라지면 물체에 미치는 효과가 달라져요.","d":0.85,"kind":"추론","cid":"S5-1-2","qid":"S5-1-2-6","title":"힘의 삼요소와 화살표 표현"}]},{"id":"S5-1-3","title":"힘의 합성과 합력","tier":3,"known":"친구와 함께 밀면 혼자 밀 때보다 더 세게 밀려요.","fresh":"같은 방향의 두 힘은 더하고 반대 방향의 두 힘은 빼서 합력을 구합니다. 나란하지 않은 두 힘은 평행사변형법으로 크기와 방향을 구합니다.","tip":"장바구니를 함께 밀 때와 서로 반대로 밀 때를 비교해 보세요.","card":{"key":"합력 = 두 힘을 하나로 합한 힘","easy":"두 힘을 하나로 합친 힘이 합력이에요.","why":"같은 방향은 더하고 반대 방향은 빼서 구해요.","example":"친구와 함께 밀면 더 세게 밀려요."},"qs":[{"id":"S5-1-3-1","stem":"두 힘을 하나로 합친 힘을 무엇이라 하는가?","choices":["삼요소","마찰력","합력","부력"],"answer":2,"explain":"여러 힘을 하나로 합한 힘을 합력이라고 해요.","d":0.26,"kind":"기억","cid":"S5-1-3","qid":"S5-1-3-1","title":"힘의 합성과 합력"},{"id":"S5-1-3-2","stem":"같은 방향으로 3N과 4N을 밀면 합력은?","choices":["12N","7N","0N","1N"],"answer":1,"explain":"같은 방향의 두 힘은 더하므로 합력은 7N이에요.","d":0.44,"kind":"기억","cid":"S5-1-3","qid":"S5-1-3-2","title":"힘의 합성과 합력"},{"id":"S5-1-3-3","stem":"두 힘의 합력이 0이 되는 경우는?","choices":["같은 방향으로 3N끼리 밀 때","반대 방향으로 3N과 5N일 때","같은 방향으로 5N끼리 밀 때","반대 방향으로 같은 크기 5N끼리 밀 때"],"answer":3,"explain":"크기가 같고 방향이 반대인 두 힘의 합력은 0이에요.","d":0.56,"kind":"적용","cid":"S5-1-3","qid":"S5-1-3-3","title":"힘의 합성과 합력"},{"id":"S5-1-3-4","stem":"힘의 합성에 대한 설명으로 옳지 않은 것은?","choices":["나란하지 않은 두 힘은 평행사변형법으로 구한다","합력은 크기와 방향을 함께 나타낸다","같은 방향의 두 힘은 더해서 합력을 구한다","반대 방향의 두 힘은 더해서 합력을 구한다"],"answer":3,"explain":"반대 방향의 두 힘은 큰 힘에서 작은 힘을 빼서 합력을 구해요.","d":0.66,"kind":"적용","cid":"S5-1-3","qid":"S5-1-3-4","title":"힘의 합성과 합력"},{"id":"S5-1-3-5","stem":"두 사람이 장바구니를 반대로 10N씩 당기면 합력은?","choices":["10N","5N","20N","0N"],"answer":3,"explain":"반대 방향으로 크기가 같으면 서로 상쇄되어 합력이 0이에요.","d":0.76,"kind":"적용","cid":"S5-1-3","qid":"S5-1-3-5","title":"힘의 합성과 합력"},{"id":"S5-1-3-6","stem":"친구와 함께 밀면 더 세게 밀리는 까닭은?","choices":["작용점이 사라져서","힘의 단위가 커져서","두 힘의 방향이 서로 반대여서","같은 방향의 두 힘의 합력이 커져서"],"answer":3,"explain":"같은 방향의 두 힘을 더하면 합력이 커져 물체가 더 잘 움직여요.","d":0.84,"kind":"추론","cid":"S5-1-3","qid":"S5-1-3-6","title":"힘의 합성과 합력"}]}]},{"id":"S5-2","title":"5-2. 여러 가지 힘","concepts":[{"id":"S5-2-1","title":"중력과 무게","tier":2,"known":"공을 손에서 놓으면 항상 아래로 떨어져요.","fresh":"중력은 지구가 물체를 당기는 힘으로 방향은 항상 연직 아래쪽입니다. 무게는 물체에 작용하는 중력의 크기(N)이고, 질량은 장소가 변해도 변하지 않습니다.","tip":"달에서 몸무게가 지구의 1/6이 되는 까닭을 함께 이야기해 보세요.","card":{"key":"중력은 지구가 당기는 힘, 방향은 연직 아래","easy":"지구가 물체를 아래로 당기는 힘이에요.","why":"지구가 물체를 당기기 때문이에요.","example":"공을 놓으면 아래로 떨어져요."},"qs":[{"id":"S5-2-1-1","stem":"중력의 방향은 어떻게 정해지는가?","choices":["항상 연직 위쪽","물체가 움직이는 방향","항상 연직 아래쪽","항상 동쪽"],"answer":2,"explain":"중력은 지구가 물체를 당기는 힘이라 방향이 항상 연직 아래쪽이에요.","d":0.26,"kind":"기억","cid":"S5-2-1","qid":"S5-2-1-1","title":"중력과 무게"},{"id":"S5-2-1-2","stem":"물체에 작용하는 중력의 크기를 무엇이라 하는가?","choices":["질량","밀도","부피","무게"],"answer":3,"explain":"물체에 작용하는 중력의 크기를 무게라고 하고 단위는 N이에요.","d":0.44,"kind":"기억","cid":"S5-2-1","qid":"S5-2-1-2","title":"중력과 무게"},{"id":"S5-2-1-3","stem":"중력이 하는 일의 예로 알맞은 것은?","choices":["식물이 햇빛을 받는 것","튀어 오른 공이 다시 떨어지는 것","소리가 벽에서 반사되는 것","전등이 전기로 빛나는 것"],"answer":1,"explain":"떨어지는 공은 지구가 당기는 중력을 받고 있어요.","d":0.56,"kind":"적용","cid":"S5-2-1","qid":"S5-2-1-3","title":"중력과 무게"},{"id":"S5-2-1-4","stem":"중력과 무게에 대한 설명으로 옳지 않은 것은?","choices":["질량은 달에 가면 작아진다","무게의 방향은 연직 아래쪽이다","중력은 지구가 물체를 당기는 힘이다","무게의 단위는 N(뉴턴)이다"],"answer":0,"explain":"질량은 장소가 변해도 변하지 않고 무게만 달라져요.","d":0.66,"kind":"적용","cid":"S5-2-1","qid":"S5-2-1-4","title":"중력과 무게"},{"id":"S5-2-1-5","stem":"우주비행사가 달에 갔을 때 변하는 것은?","choices":["무게","몸속 입자의 수","피부의 색깔","질량"],"answer":0,"explain":"달의 중력이 지구보다 작아 무게가 줄어요. 질량은 그대로예요.","d":0.76,"kind":"적용","cid":"S5-2-1","qid":"S5-2-1-5","title":"중력과 무게"},{"id":"S5-2-1-6","stem":"달에서 몸무게가 더 가볍게 느껴지는 까닭은?","choices":["몸속 입자가 사라졌기 때문","달의 중력이 지구보다 작기 때문","달에는 공기가 없기 때문","몸의 질량이 줄었기 때문"],"answer":1,"explain":"무게는 중력의 크기라서 중력이 작은 달에서는 무게가 줄어요.","d":0.84,"kind":"추론","cid":"S5-2-1","qid":"S5-2-1-6","title":"중력과 무게"}]},{"id":"S5-2-2","title":"탄성력","tier":2,"known":"용수철을 당겼다가 놓으면 원래대로 돌아와요.","fresh":"탄성력은 변형된 물체가 원래 모양으로 되돌아가려는 힘으로, 방향은 변형된 방향의 반대이고 변형된 정도가 클수록 커집니다.","tip":"고무줄을 여러 길이로 늘려 보고 되돌아가려는 힘을 느껴보게 하세요.","card":{"key":"탄성력 = 원래 모양으로 돌아가려는 힘","easy":"늘어난 물체가 되돌아가려는 힘이에요.","why":"모양이 변했으니 원래대로 돌아가려 하기 때문이에요.","example":"고무줄을 놓으면 원래대로 돌아와요."},"qs":[{"id":"S5-2-2-1","stem":"탄성력의 방향은 어느 쪽인가?","choices":["변형된 방향의 반대쪽","항상 동쪽","변형된 방향과 같은 쪽","항상 연직 아래쪽"],"answer":0,"explain":"탄성력은 원래 모양으로 돌아가려 하므로 변형된 방향의 반대예요.","d":0.32,"kind":"기억","cid":"S5-2-2","qid":"S5-2-2-1","title":"탄성력"},{"id":"S5-2-2-2","stem":"변형된 정도가 클수록 탄성력의 크기는?","choices":["변하지 않는다","커진다","0이 된다","작아진다"],"answer":1,"explain":"많이 변형될수록 되돌아가려는 탄성력이 커져요.","d":0.48,"kind":"기억","cid":"S5-2-2","qid":"S5-2-2-2","title":"탄성력"},{"id":"S5-2-2-3","stem":"탄성력이 물체를 움직이게 한 예는?","choices":["얼음이 녹아 물이 된다","구리선에 전류가 흐른다","활시위를 놓으면 화살이 날아간다","고무줄을 놓아도 그대로 늘어나 있다"],"answer":2,"explain":"활시위가 되돌아가려는 탄성력이 화살을 앞으로 밀어요.","d":0.6,"kind":"적용","cid":"S5-2-2","qid":"S5-2-2-3","title":"탄성력"},{"id":"S5-2-2-4","stem":"탄성력에 대한 설명으로 옳지 않은 것은?","choices":["변형이 계속되어도 탄성력은 항상 같다","변형이 클수록 탄성력이 커진다","변형된 물체가 원래 모양으로 돌아가려는 힘이다","탄성력의 방향은 변형된 방향의 반대이다"],"answer":0,"explain":"변형된 정도가 클수록 탄성력의 크기도 커져요.","d":0.7,"kind":"적용","cid":"S5-2-2","qid":"S5-2-2-4","title":"탄성력"},{"id":"S5-2-2-5","stem":"고무줄을 더 길게 늘였을 때 나타나는 변화는?","choices":["되돌아가려는 힘의 방향이 반대로 바뀐다","되돌아가려는 힘이 커진다","되돌아가려는 힘이 사라진다","되돌아가려는 힘이 작아진다"],"answer":1,"explain":"더 많이 늘일수록 되돌아가려는 탄성력이 커져요.","d":0.79,"kind":"적용","cid":"S5-2-2","qid":"S5-2-2-5","title":"탄성력"},{"id":"S5-2-2-6","stem":"늘린 용수철을 놓으면 원래 모양으로 돌아가는 까닭은?","choices":["원래 모양으로 돌아가려는 탄성력이 작용해서","중력이 없어져서","마찰력이 커져서","용수철의 질량이 줄어들어서"],"answer":0,"explain":"변형된 물체가 원래 모양으로 돌아가려는 힘이 탄성력이에요.","d":0.85,"kind":"추론","cid":"S5-2-2","qid":"S5-2-2-6","title":"탄성력"}]},{"id":"S5-2-3","title":"마찰력","tier":2,"known":"바닥이 미끄러우면 잘 넘어져요.","fresh":"마찰력은 접촉면에서 물체의 운동을 방해하는 힘으로 방향은 운동 방향의 반대이고, 접촉면이 거칠수록 커집니다.","tip":"같은 상자를 매끄러운 바닥과 거친 바닥에서 각각 밀어보게 하세요.","card":{"key":"마찰력 = 운동을 방해하는 힘, 방향은 운동 반대","easy":"물체의 운동을 방해하는 힘이에요.","why":"접촉면이 물체의 운동을 막기 때문이에요.","example":"거친 바닥에서 공이 빨리 멈춰요."},"qs":[{"id":"S5-2-3-1","stem":"마찰력의 방향은 어느 쪽인가?","choices":["물체의 운동 방향과 반대쪽","항상 연직 위쪽","물체의 운동 방향과 같은 쪽","항상 연직 아래쪽"],"answer":0,"explain":"마찰력은 운동을 방해하므로 운동 방향의 반대쪽으로 작용해요.","d":0.26,"kind":"기억","cid":"S5-2-3","qid":"S5-2-3-1","title":"마찰력"},{"id":"S5-2-3-2","stem":"접촉면이 거칠수록 마찰력의 크기는?","choices":["0이 된다","변하지 않는다","더 커진다","작아진다"],"answer":2,"explain":"접촉면이 거칠수록 마찰력이 커져요.","d":0.44,"kind":"기억","cid":"S5-2-3","qid":"S5-2-3-2","title":"마찰력"},{"id":"S5-2-3-3","stem":"마찰력이 작아서 일어나는 일은?","choices":["자석이 냉장고 문에 붙어 있다","미끄러운 빙판에서 넘어진다","연필로 종이에 글씨가 잘 써진다","자동차 타이어가 길에 잘 붙는다"],"answer":1,"explain":"빙판은 접촉면이 매끄러워 마찰력이 작아 잘 넘어져요.","d":0.56,"kind":"적용","cid":"S5-2-3","qid":"S5-2-3-3","title":"마찰력"},{"id":"S5-2-3-4","stem":"마찰력에 대한 설명으로 옳지 않은 것은?","choices":["접촉면에서 물체의 운동을 방해한다","방향은 운동 방향의 반대이다","접촉면이 매끄러울수록 커진다","접촉면이 거칠수록 커진다"],"answer":2,"explain":"접촉면이 매끄러울수록 마찰력은 작아져요.","d":0.66,"kind":"적용","cid":"S5-2-3","qid":"S5-2-3-4","title":"마찰력"},{"id":"S5-2-3-5","stem":"무거운 상자가 잘 미끄러지지 않는 까닭은?","choices":["미는 힘이 사라져서","상자가 갑자기 가벼워져서","바닥과의 마찰력이 운동을 방해해서","중력이 위로 작용해서"],"answer":2,"explain":"바닥과 상자 사이의 마찰력이 운동을 방해하기 때문이에요.","d":0.76,"kind":"적용","cid":"S5-2-3","qid":"S5-2-3-5","title":"마찰력"},{"id":"S5-2-3-6","stem":"빙판에서 잘 넘어지는 까닭은?","choices":["중력이 사라져서","몸의 부피가 커져서","빙판이 매끄러워 마찰력이 작아서","몸의 질량이 커져서"],"answer":2,"explain":"접촉면이 매끄러우면 마찰력이 작아 발이 미끄러져 넘어져요.","d":0.84,"kind":"추론","cid":"S5-2-3","qid":"S5-2-3-6","title":"마찰력"}]},{"id":"S5-2-4","title":"부력","tier":3,"known":"물속에 들어가면 몸이 가벼워지는 느낌이 들어요.","fresh":"부력은 액체나 기체가 물체를 위로 밀어 올리는 힘으로, 물체가 밀어낸 유체의 부피와 유체의 종류에 따라 달라집니다.","tip":"목욕할 때 몸이 뜨는 느낌의 까닭을 함께 이야기해 보세요.","card":{"key":"부력 = 유체가 물체를 위로 밀어 올리는 힘","easy":"물이나 공기가 물체를 위로 미는 힘이에요.","why":"밀어낸 유체의 부피가 클수록 커지기 때문이에요.","example":"물속에서 몸이 가볍게 느껴져요."},"qs":[{"id":"S5-2-4-1","stem":"부력의 방향은 어느 쪽인가?","choices":["물체를 위로 밀어 올리는 쪽","항상 옆쪽","물체를 아래로 누르는 쪽","물체가 움직이는 방향"],"answer":0,"explain":"부력은 액체나 기체가 물체를 위로 밀어 올리는 힘이에요.","d":0.32,"kind":"기억","cid":"S5-2-4","qid":"S5-2-4-1","title":"부력"},{"id":"S5-2-4-2","stem":"부력의 크기는 물체가 밀어낸 유체의 무엇에 따라 달라지는가?","choices":["색깔","부피","무게","온도"],"answer":1,"explain":"물체가 밀어낸 유체의 부피가 클수록 부력이 커져요.","d":0.48,"kind":"기억","cid":"S5-2-4","qid":"S5-2-4-2","title":"부력"},{"id":"S5-2-4-3","stem":"부력 때문에 나타나는 현상은?","choices":["철사에 전류가 흐른다","자석이 냉장고 문에 붙는다","전등에 불이 켜진다","물에 뜬 배가 가라앉지 않는다"],"answer":3,"explain":"물이 배를 위로 밀어 올리는 부력 때문에 배가 가라앉지 않아요.","d":0.6,"kind":"적용","cid":"S5-2-4","qid":"S5-2-4-3","title":"부력"},{"id":"S5-2-4-4","stem":"부력에 대한 설명으로 옳지 않은 것은?","choices":["액체가 물체를 위로 미는 힘이다","기체도 물체를 위로 미는 힘을 준다","밀어낸 유체의 부피가 클수록 커진다","부력의 방향은 항상 아래쪽이다"],"answer":3,"explain":"부력의 방향은 물체를 위로 밀어 올리는 쪽이에요.","d":0.7,"kind":"적용","cid":"S5-2-4","qid":"S5-2-4-4","title":"부력"},{"id":"S5-2-4-5","stem":"물속에서 몸이 가볍게 느껴지는 까닭은?","choices":["물이 몸을 위로 밀어 올려서","물의 온도가 낮아서","중력이 사라져서","몸의 질량이 줄어서"],"answer":0,"explain":"물이 위로 밀어 올리는 부력 때문에 가볍게 느껴져요.","d":0.79,"kind":"적용","cid":"S5-2-4","qid":"S5-2-4-5","title":"부력"},{"id":"S5-2-4-6","stem":"같은 물체를 물과 기름에 넣었을 때 부력이 달라지는 까닭은?","choices":["중력이 커져서","밀어 올리는 유체의 종류가 달라져서","물체의 색이 변해서","물체의 부피가 줄어서"],"answer":1,"explain":"부력은 밀어낸 유체의 부피와 유체의 종류에 따라 달라져요.","d":0.85,"kind":"추론","cid":"S5-2-4","qid":"S5-2-4-6","title":"부력"}]}]},{"id":"S5-3","title":"5-3. 힘의 평형과 물체의 운동","concepts":[{"id":"S5-3-1","title":"알짜힘","tier":2,"known":"여러 사람이 같은 방향으로 밀면 물체가 더 잘 움직여요.","fresh":"알짜힘은 한 물체에 작용하는 여러 힘을 하나로 합한 힘으로, 크기와 방향을 함께 나타냅니다.","tip":"가족이 함께 수레를 밀 때 방향이 같을 때와 다를 때를 비교해 보세요.","card":{"key":"알짜힘 = 한 물체에 작용하는 여러 힘을 합친 힘","easy":"작용하는 힘들을 하나로 합친 힘이에요.","why":"실제로 물체를 움직이는 효과를 알 수 있기 때문이에요.","example":"두 사람이 함께 밀면 알짜힘이 커져요."},"qs":[{"id":"S5-3-1-1","stem":"한 물체에 작용하는 여러 힘을 하나로 합한 힘은?","choices":["마찰력","탄성력","알짜힘","중력"],"answer":2,"explain":"한 물체에 작용하는 여러 힘을 하나로 합한 힘을 알짜힘이라 해요.","d":0.26,"kind":"기억","cid":"S5-3-1","qid":"S5-3-1-1","title":"알짜힘"},{"id":"S5-3-1-2","stem":"알짜힘은 크기와 무엇을 함께 나타내는가?","choices":["시간","부피","방향","질량"],"answer":2,"explain":"알짜힘은 크기와 방향을 함께 나타내요.","d":0.44,"kind":"기억","cid":"S5-3-1","qid":"S5-3-1-2","title":"알짜힘"},{"id":"S5-3-1-3","stem":"알짜힘이 0이 되는 경우는?","choices":["같은 방향으로 두 힘이 작용할 때","한 방향으로 힘 하나만 작용할 때","반대 방향으로 크기가 다른 두 힘이 작용할 때","반대 방향으로 같은 크기 두 힘이 작용할 때"],"answer":3,"explain":"크기가 같고 방향이 반대인 두 힘은 상쇄되어 알짜힘이 0이 돼요.","d":0.56,"kind":"적용","cid":"S5-3-1","qid":"S5-3-1-3","title":"알짜힘"},{"id":"S5-3-1-4","stem":"알짜힘에 대한 설명으로 옳지 않은 것은?","choices":["크기와 방향을 함께 나타낸다","여러 힘을 하나로 합한 힘이다","알짜힘의 단위는 N(뉴턴)이 아니다","알짜힘은 항상 가장 큰 힘과 같다"],"answer":3,"explain":"알짜힘은 힘들을 합한 결과라서 가장 큰 힘과 항상 같지는 않아요.","d":0.66,"kind":"적용","cid":"S5-3-1","qid":"S5-3-1-4","title":"알짜힘"},{"id":"S5-3-1-5","stem":"수레를 앞으로 5N 밀고 다른 사람이 뒤로 3N 밀면?","choices":["2N로 앞으로 간다","알짜힘이 0이라 움직이지 않는다","5N로 뒷걸음친다","8N로 앞으로 간다"],"answer":0,"explain":"앞으로 미는 힘에서 뒤로 미는 힘을 빼면 2N가 남아요.","d":0.76,"kind":"적용","cid":"S5-3-1","qid":"S5-3-1-5","title":"알짜힘"},{"id":"S5-3-1-6","stem":"여러 힘을 하나로 합쳐 알짜힘을 구하는 까닭은?","choices":["물체의 색을 알기 위해서","물체의 질량을 알기 위해서","물체가 실제로 어떻게 움직이는지 알기 위해서","힘의 단위를 바꾸기 위해서"],"answer":2,"explain":"알짜힘을 알면 물체의 운동 상태가 어떻게 변할지 알 수 있어요.","d":0.84,"kind":"추론","cid":"S5-3-1","qid":"S5-3-1-6","title":"알짜힘"}]},{"id":"S5-3-2","title":"두 힘의 평형 조건","tier":2,"known":"줄다리기에서 힘이 비기면 줄이 움직이지 않아요.","fresh":"두 힘의 크기가 같고 방향이 반대이며 작용선이 일치할 때 두 힘이 평형을 이룹니다.","tip":"물병을 손으로 들고 가만히 있을 때 작용하는 두 힘을 함께 생각해 보세요.","card":{"key":"평형 = 크기 같고 방향 반대, 작용선 일치","easy":"두 힘의 크기가 같고 방향이 반대일 때 평형이에요.","why":"두 힘의 알짜힘이 0이 되기 때문이에요.","example":"줄다리기에서 힘이 비기면 줄이 멈춰요."},"qs":[{"id":"S5-3-2-1","stem":"두 힘이 평형을 이루기 위한 조건은?","choices":["크기가 다르고 방향이 같을 때","크기가 같고 방향이 반대일 때","크기가 다르고 방향이 반대일 때","크기가 같고 방향이 같을 때"],"answer":1,"explain":"크기가 같고 방향이 반대이며 작용선이 일치해야 평형이에요.","d":0.32,"kind":"기억","cid":"S5-3-2","qid":"S5-3-2-1","title":"두 힘의 평형 조건"},{"id":"S5-3-2-2","stem":"평형을 이루는 두 힘을 하나로 합하면?","choices":["작은 힘과 같아진다","큰 힘과 같아진다","힘이 0인 것과 같아진다","두 힘을 더한 값과 같아진다"],"answer":2,"explain":"평형을 이루는 두 힘은 서로 상쇄되어 합한 힘이 0이 돼요.","d":0.48,"kind":"기억","cid":"S5-3-2","qid":"S5-3-2-2","title":"두 힘의 평형 조건"},{"id":"S5-3-2-3","stem":"두 힘이 평형을 이룬 상태의 예는?","choices":["점점 빨라지는 낙하하는 공","점점 느려지는 굴러가는 공","책상 위에서 멈춰 있는 책","경사로를 굴러 내려가는 공"],"answer":2,"explain":"책상 위 책은 작용하는 힘의 알짜힘이 0이라 평형 상태예요.","d":0.6,"kind":"적용","cid":"S5-3-2","qid":"S5-3-2-3","title":"두 힘의 평형 조건"},{"id":"S5-3-2-4","stem":"두 힘의 평형에 대한 설명으로 옳지 않은 것은?","choices":["두 힘의 방향이 반대여야 한다","두 힘의 작용선이 일치해야 한다","평형이면 물체가 반드시 움직인다","두 힘의 크기가 같아야 한다"],"answer":2,"explain":"평형이면 알짜힘이 0이라 물체의 운동 상태가 변하지 않아요.","d":0.7,"kind":"적용","cid":"S5-3-2","qid":"S5-3-2-4","title":"두 힘의 평형 조건"},{"id":"S5-3-2-5","stem":"줄다리기에서 양쪽이 100N로 힘이 비기면 줄은?","choices":["오른쪽으로 간다","움직이지 않는다","위로 뜬다","왼쪽으로 간다"],"answer":1,"explain":"크기가 같고 방향이 반대인 두 힘이 평형을 이루어 줄이 멈춰요.","d":0.79,"kind":"적용","cid":"S5-3-2","qid":"S5-3-2-5","title":"두 힘의 평형 조건"},{"id":"S5-3-2-6","stem":"손으로 든 물병이 떨어지지 않고 멈춰 있는 까닭은?","choices":["물병에 작용하는 중력이 사라져서","손이 미는 힘이 중력보다 훨씬 커서","물병의 무게가 0이어서","손이 미는 힘과 중력이 평형을 이루어서"],"answer":3,"explain":"위로 미는 힘과 아래로 당기는 중력이 평형을 이루어 알짜힘이 0이에요.","d":0.85,"kind":"추론","cid":"S5-3-2","qid":"S5-3-2-6","title":"두 힘의 평형 조건"}]},{"id":"S5-3-3","title":"알짜힘과 물체의 운동","tier":2,"known":"가만히 있는 물건은 그대로 있고, 미는 동안에만 움직여요.","fresh":"물체에 작용하는 알짜힘이 0이면 정지한 물체는 계속 정지하고 운동하는 물체는 등속 직선 운동을 합니다. 알짜힘이 0이 아니면 속력이나 운동 방향이 변합니다.","tip":"책상 위 책과 굴러가는 공을 보며 두 경우를 구분해 보게 하세요.","card":{"key":"알짜힘이 0이면 물체의 운동 상태가 변하지 않아요","easy":"알짜힘이 0이면 운동 상태가 변하지 않아요.","why":"알짜힘이 0이면 속력과 방향이 그대로이기 때문이에요.","example":"책상 위 책은 알짜힘이 0이라 멈춰 있어요."},"qs":[{"id":"S5-3-3-1","stem":"알짜힘이 0일 때 운동하는 물체는?","choices":["운동 방향이 바뀐다","등속 직선 운동을 한다","점점 빨라진다","점점 느려진다"],"answer":1,"explain":"알짜힘이 0이면 운동하는 물체는 등속 직선 운동을 해요.","d":0.26,"kind":"기억","cid":"S5-3-3","qid":"S5-3-3-1","title":"알짜힘과 물체의 운동"},{"id":"S5-3-3-2","stem":"알짜힘이 0이면 정지한 물체는 계속 무엇을 하는가?","choices":["정지해 있다","회전한다","점점 움직인다","점점 빨라진다"],"answer":0,"explain":"알짜힘이 0이면 정지한 물체는 계속 정지해 있어요.","d":0.44,"kind":"기억","cid":"S5-3-3","qid":"S5-3-3-2","title":"알짜힘과 물체의 운동"},{"id":"S5-3-3-3","stem":"알짜힘이 0이 아닌 물체의 운동 상태는?","choices":["운동 상태가 변하지 않는다","항상 등속 직선 운동을 한다","항상 정지해 있다","속력이나 운동 방향이 변한다"],"answer":3,"explain":"알짜힘이 0이 아니면 속력이나 운동 방향이 변해요.","d":0.56,"kind":"적용","cid":"S5-3-3","qid":"S5-3-3-3","title":"알짜힘과 물체의 운동"},{"id":"S5-3-3-4","stem":"알짜힘과 물체의 운동 설명으로 옳지 않은 것은?","choices":["알짜힘이 0이면 운동 상태가 변하지 않는다","알짜힘이 0이면 운동하는 물체가 곧 멈춘다","알짜힘이 0이 아니면 속력이 변할 수 있다","알짜힘이 0이면 정지한 물체는 계속 정지한다"],"answer":1,"explain":"알짜힘이 0이면 운동하는 물체는 멈추지 않고 등속 직선 운동을 해요.","d":0.66,"kind":"적용","cid":"S5-3-3","qid":"S5-3-3-4","title":"알짜힘과 물체의 운동"},{"id":"S5-3-3-5","stem":"얼음 위를 미끄러지는 원판이 거의 멈추지 않는 까닭은?","choices":["알짜힘이 0에 가까워 운동 상태가 잘 변하지 않아서","마찰력이 아주 커서","중력이 사라져서","알짜힘이 계속 커져서"],"answer":0,"explain":"마찰력이 작아 알짜힘이 0에 가까우면 운동 상태가 거의 변하지 않아요.","d":0.76,"kind":"적용","cid":"S5-3-3","qid":"S5-3-3-5","title":"알짜힘과 물체의 운동"},{"id":"S5-3-3-6","stem":"가만히 있던 물건이 미는 동안에만 움직이는 까닭은?","choices":["힘을 주면 물체의 질량이 커져서","바닥이 항상 거칠어서","물체가 스스로 움직이려 해서","미는 힘이 작용하는 동안에만 알짜힘이 0이 아니어서"],"answer":3,"explain":"미는 힘이 작용하는 동안에만 알짜힘이 0이 아니어서 운동 상태가 변해요.","d":0.84,"kind":"추론","cid":"S5-3-3","qid":"S5-3-3-6","title":"알짜힘과 물체의 운동"}]},{"id":"S5-3-4","title":"여러 가지 힘의 평형 사례","tier":3,"known":"천장에 매달린 조명은 떨어지지 않고 그대로 있어요.","fresh":"물체에 작용하는 모든 힘의 알짜힘이 0이면 물체의 운동 상태는 변하지 않습니다.","tip":"천장에 매달린 물건이나 책상 위 물건에 작용하는 힘을 함께 그려보세요.","card":{"key":"모든 힘의 알짜힘이 0이면 운동 상태가 변하지 않아요","easy":"작용한 모든 힘의 합이 0이면 그대로 있어요.","why":"힘들이 서로 상쇄되어 알짜힘이 0이 되기 때문이에요.","example":"매달린 조명과 책상 위 책이 그대로 있어요."},"qs":[{"id":"S5-3-4-1","stem":"물체에 작용하는 모든 힘의 알짜힘이 0이면 물체는?","choices":["운동 상태가 변하지 않는다","반드시 위로 떠오른다","반드시 점점 빨라진다","모양이 반드시 변한다"],"answer":0,"explain":"모든 힘의 알짜힘이 0이면 물체의 운동 상태는 변하지 않아요.","d":0.32,"kind":"기억","cid":"S5-3-4","qid":"S5-3-4-1","title":"여러 가지 힘의 평형 사례"},{"id":"S5-3-4-2","stem":"천장에 매달린 조명에 작용하는 두 힘은 중력과 무엇인가?","choices":["탄성력","줄이 조명을 당기는 힘","부력","마찰력"],"answer":1,"explain":"매달린 조명에는 중력과 줄이 당기는 힘이 함께 작용해요.","d":0.48,"kind":"기억","cid":"S5-3-4","qid":"S5-3-4-2","title":"여러 가지 힘의 평형 사례"},{"id":"S5-3-4-3","stem":"책상 위 책이 그대로 있는 까닭은?","choices":["책에 작용하는 힘의 알짜힘이 0이어서","중력이 작용하지 않아서","책이 아주 가벼워서","마찰력이 없어서"],"answer":0,"explain":"책에 작용하는 힘의 알짜힘이 0이라 운동 상태가 변하지 않아요.","d":0.6,"kind":"적용","cid":"S5-3-4","qid":"S5-3-4-3","title":"여러 가지 힘의 평형 사례"},{"id":"S5-3-4-4","stem":"평형 상태의 물체에 대한 설명으로 옳지 않은 것은?","choices":["알짜힘이 0이면 물체의 운동 상태가 변한다","책상 위 책에 작용하는 알짜힘은 0이다","여러 힘이 상쇄되어 평형을 이룬다","매달린 조명에 작용하는 알짜힘은 0이다"],"answer":0,"explain":"알짜힘이 0이면 물체의 운동 상태는 변하지 않아요.","d":0.7,"kind":"적용","cid":"S5-3-4","qid":"S5-3-4-4","title":"여러 가지 힘의 평형 사례"},{"id":"S5-3-4-5","stem":"매달린 조명이 떨어지지 않는 까닭은?","choices":["조명에 중력이 작용하지 않아서","줄의 길이가 짧아서","줄이 당기는 힘과 중력이 평형을 이루어서","조명의 무게가 0이어서"],"answer":2,"explain":"줄이 당기는 힘과 중력이 평형을 이루어 알짜힘이 0이기 때문이에요.","d":0.79,"kind":"적용","cid":"S5-3-4","qid":"S5-3-4-5","title":"여러 가지 힘의 평형 사례"},{"id":"S5-3-4-6","stem":"두 힘이 평형이면 물체의 운동 상태가 변하지 않는 까닭은?","choices":["두 힘의 크기가 달라져서","두 힘의 방향이 같아져서","두 힘이 한 방향으로 더해져서","두 힘이 상쇄되어 알짜힘이 0이 되어서"],"answer":3,"explain":"크기가 같고 방향이 반대인 두 힘이 상쇄되어 알짜힘이 0이 되기 때문이에요.","d":0.85,"kind":"추론","cid":"S5-3-4","qid":"S5-3-4-6","title":"여러 가지 힘의 평형 사례"}]}]}]},{"id":"S7","title":"7. 태양계","sections":[{"id":"S7-1","title":"7-1. 태양계의 구성","concepts":[{"id":"S7-1-1","title":"태양계를 구성하는 천체","tier":1,"known":"밤하늘에서 별과 행성을 본 적이 있어요.","fresh":"태양계는 태양, 8개의 행성, 위성, 왜소행성, 소행성, 혜성 등으로 구성됩니다.","tip":"천체 관측 앱이나 사진으로 행성을 함께 찾아보세요.","card":{"key":"태양계 = 태양 + 8개 행성 + 위성·왜소행성·소행성·혜성","easy":"태양을 중심으로 여러 천체가 모여 있는 무리","why":"태양의 큰 중력이 여러 천체를 붙잡고 있기 때문","example":"밤하늘에 보이는 행성도 태양계 식구"},"qs":[{"id":"S7-1-1-1","stem":"태양계를 구성하는 천체로 옳은 것은?","choices":["은하, 성단, 성운, 블랙홀","행성, 위성, 왜소행성, 소행성","북극성, 오리온자리, 백조자리","지구의 대륙과 해양"],"answer":1,"explain":"태양계는 태양과 8개 행성, 위성, 왜소행성, 소행성, 혜성 등으로 구성됩니다.","d":0.26,"kind":"기억","cid":"S7-1-1","qid":"S7-1-1-1","title":"태양계를 구성하는 천체"},{"id":"S7-1-1-2","stem":"태양계의 중심에 있는 천체는?","choices":["달","목성","태양","북극성"],"answer":2,"explain":"태양계는 태양을 중심으로 여러 천체가 모여 이루어진 무리입니다.","d":0.44,"kind":"기억","cid":"S7-1-1","qid":"S7-1-1-2","title":"태양계를 구성하는 천체"},{"id":"S7-1-1-3","stem":"태양계에 속하는 천체를 고른 것은?","choices":["우리 은하의 중심","화성과 그 주위를 도는 위성","안드로메다 은하","태양계 밖의 다른 별"],"answer":1,"explain":"화성은 행성이고 그 주위를 도는 천체는 위성으로 모두 태양계에 속합니다.","d":0.56,"kind":"적용","cid":"S7-1-1","qid":"S7-1-1-3","title":"태양계를 구성하는 천체"},{"id":"S7-1-1-4","stem":"태양계에 대한 설명으로 옳지 않은 것은?","choices":["행성 주위를 도는 천체를 위성이라 한다","태양은 태양계의 중심 천체이다","태양계의 행성은 8개보다 많다","혜성도 태양계를 이루는 천체이다"],"answer":2,"explain":"태양계의 행성은 수성부터 해왕성까지 모두 8개입니다.","d":0.66,"kind":"적용","cid":"S7-1-1","qid":"S7-1-1-4","title":"태양계를 구성하는 천체"},{"id":"S7-1-1-5","stem":"밤하늘에서 밝게 빛나는 행성을 보았다. 이 행성이 속한 곳은?","choices":["태양계","성단","별자리","다른 은하"],"answer":0,"explain":"밤에 보이는 행성도 태양 주위를 도는 태양계의 천체입니다.","d":0.76,"kind":"적용","cid":"S7-1-1","qid":"S7-1-1-5","title":"태양계를 구성하는 천체"},{"id":"S7-1-1-6","stem":"태양계라는 이름이 붙은 까닭은?","choices":["태양이 태양계의 중심에 있기 때문","태양이 우주에서 가장 큰 별이기 때문","태양이 행성보다 작기 때문","태양이 밤에만 보이기 때문"],"answer":0,"explain":"여러 천체가 태양을 중심으로 모여 있어 태양계라고 부릅니다.","d":0.84,"kind":"추론","cid":"S7-1-1","qid":"S7-1-1-6","title":"태양계를 구성하는 천체"}]},{"id":"S7-1-2","title":"지구형 행성과 목성형 행성","tier":2,"known":"수성·금성·지구·화성 순서를 들어봤어요.","fresh":"수성·금성·지구·화성은 지구형 행성(작고 밀도가 크며 표면이 암석), 목성·토성·천왕성·해왕성은 목성형 행성(크고 밀도가 작으며 고리와 위성이 많음)입니다.","tip":"태양계 그림에서 두 무리로 나눠 색칠해 보게 하세요.","card":{"key":"안쪽 네 행성은 지구형, 바깥 네 행성은 목성형","easy":"작고 단단한 행성과 크고 가벼운 행성 두 무리","why":"태양에서 멀수록 기체가 많이 뭉쳐 크고 밀도가 작아짐","example":"목성과 토성은 고리가 있어 망원경으로 잘 보임"},"qs":[{"id":"S7-1-2-1","stem":"지구형 행성에 속하는 행성을 고른 것은?","choices":["지구, 목성, 토성, 화성","목성, 토성, 천왕성, 해왕성","수성, 목성, 지구, 해왕성","수성, 금성, 지구, 화성"],"answer":3,"explain":"수성·금성·지구·화성은 작고 밀도가 큰 지구형 행성입니다.","d":0.32,"kind":"기억","cid":"S7-1-2","qid":"S7-1-2-1","title":"지구형 행성과 목성형 행성"},{"id":"S7-1-2-2","stem":"지구형 행성은 목성형 행성보다 밀도가 어떠한가?","choices":["작다","크다","0이다","같다"],"answer":1,"explain":"지구형 행성은 작지만 밀도가 크고, 목성형 행성은 크지만 밀도가 작습니다.","d":0.48,"kind":"기억","cid":"S7-1-2","qid":"S7-1-2-2","title":"지구형 행성과 목성형 행성"},{"id":"S7-1-2-3","stem":"고리와 위성이 많은 행성의 무리는?","choices":["지구형 행성","소행성","목성형 행성","왜소행성"],"answer":2,"explain":"목성형 행성은 크고 고리와 위성이 많은 것이 특징입니다.","d":0.6,"kind":"적용","cid":"S7-1-2","qid":"S7-1-2-3","title":"지구형 행성과 목성형 행성"},{"id":"S7-1-2-4","stem":"지구형 행성에 대한 설명으로 옳지 않은 것은?","choices":["목성형 행성보다 밀도가 크다","목성형 행성보다 크기가 크다","표면이 주로 암석으로 되어 있다","수성과 금성이 속한다"],"answer":1,"explain":"지구형 행성은 목성형 행성보다 크기가 작고 밀도가 큽니다.","d":0.7,"kind":"적용","cid":"S7-1-2","qid":"S7-1-2-4","title":"지구형 행성과 목성형 행성"},{"id":"S7-1-2-5","stem":"태양계 그림에서 작고 표면이 단단한 행성들을 묶으면?","choices":["왜소행성","혜성","목성형 행성","지구형 행성"],"answer":3,"explain":"작고 표면이 암석인 행성은 수성·금성·지구·화성으로 지구형 행성입니다.","d":0.79,"kind":"적용","cid":"S7-1-2","qid":"S7-1-2-5","title":"지구형 행성과 목성형 행성"},{"id":"S7-1-2-6","stem":"행성을 지구형과 목성형으로 나누는 기준은?","choices":["태양을 도는 데 걸리는 시간","위성의 개수만","크기와 밀도, 표면의 성질","태양에서의 거리 순서만"],"answer":2,"explain":"크기와 밀도, 표면이 암석인지에 따라 두 무리로 나눕니다.","d":0.85,"kind":"추론","cid":"S7-1-2","qid":"S7-1-2-6","title":"지구형 행성과 목성형 행성"}]},{"id":"S7-1-3","title":"소행성·혜성·왜소행성","tier":2,"known":"혜성이 꼬리를 끌고 다닌다는 이야기를 들어봤어요.","fresh":"소행성은 주로 화성과 목성 사이 소행성대에 모여 있고, 혜성은 태양에 가까워질수록 꼬리가 길어지며, 명왕성 같은 천체는 왜소행성으로 분류됩니다.","tip":"혜성 사진을 보며 꼬리가 어느 쪽을 향하는지 함께 살펴보세요.","card":{"key":"소행성은 소행성대, 혜성은 꼬리, 작은 천체는 왜소행성","easy":"행성 옆에 있는 작은 천체들의 이름","why":"행성만으로 설명되지 않는 천체를 따로 나눠 부르기 때문","example":"명왕성은 왜소행성으로 다시 분류됨"},"qs":[{"id":"S7-1-3-1","stem":"소행성이 주로 모여 있는 곳은?","choices":["화성과 목성 사이","지구와 달 사이","태양과 수성 사이","해왕성 바깥"],"answer":0,"explain":"소행성은 주로 화성과 목성 사이의 소행성대에 모여 있습니다.","d":0.26,"kind":"기억","cid":"S7-1-3","qid":"S7-1-3-1","title":"소행성·혜성·왜소행성"},{"id":"S7-1-3-2","stem":"혜성은 태양에 가까워질수록 무엇이 길어지는가?","choices":["지름","꼬리","고리","위성"],"answer":1,"explain":"혜성은 태양에 가까워질수록 꼬리가 길어집니다.","d":0.44,"kind":"기억","cid":"S7-1-3","qid":"S7-1-3-2","title":"소행성·혜성·왜소행성"},{"id":"S7-1-3-3","stem":"왜소행성으로 분류되는 천체는?","choices":["명왕성","목성","달","태양"],"answer":0,"explain":"명왕성 같은 천체는 왜소행성으로 분류됩니다.","d":0.56,"kind":"적용","cid":"S7-1-3","qid":"S7-1-3-3","title":"소행성·혜성·왜소행성"},{"id":"S7-1-3-4","stem":"소행성·혜성·왜소행성 설명으로 옳지 않은 것은?","choices":["왜소행성은 행성보다 크다","명왕성은 왜소행성으로 분류된다","소행성은 주로 소행성대에 모여 있다","혜성은 태양에 가까워지면 꼬리가 길어진다"],"answer":0,"explain":"왜소행성은 행성보다 작아 행성과 구분해 따로 부릅니다.","d":0.66,"kind":"적용","cid":"S7-1-3","qid":"S7-1-3-4","title":"소행성·혜성·왜소행성"},{"id":"S7-1-3-5","stem":"뉴스에서 꼬리가 길게 보이는 천체 사진을 보았다. 이 천체는?","choices":["왜소행성","위성","행성","혜성"],"answer":3,"explain":"태양에 가까워지며 꼬리가 길게 보이는 천체는 혜성입니다.","d":0.76,"kind":"적용","cid":"S7-1-3","qid":"S7-1-3-5","title":"소행성·혜성·왜소행성"},{"id":"S7-1-3-6","stem":"태양에 가까이 있는 혜성의 모습으로 알맞은 것은?","choices":["꼬리가 사라진다","꼬리가 아주 짧다","원형 고리가 생긴다","꼬리가 길게 보인다"],"answer":3,"explain":"태양에 가까울수록 혜성의 꼬리가 길어집니다.","d":0.84,"kind":"추론","cid":"S7-1-3","qid":"S7-1-3-6","title":"소행성·혜성·왜소행성"}]}]},{"id":"S7-2","title":"7-2. 태양의 특징과 활동","concepts":[{"id":"S7-2-1","title":"태양의 표면과 대기","tier":3,"known":"태양은 아주 뜨겁고 밝은 천체라고 알고 있어요.","fresh":"태양 표면에는 쌀알무늬와 흑점이 있고 대기에는 채층과 코로나, 홍염이 있습니다. 흑점은 주변보다 온도가 낮아 어둡게 보입니다.","tip":"태양 사진으로 함께 보되 절대 눈으로 직접 보지 않게 하세요.","card":{"key":"표면은 쌀알무늬·흑점, 대기는 채층·코로나·홍염","easy":"태양 겉면의 무늬와 겉을 둘러싼 층","why":"흑점은 주변보다 온도가 낮아 어둡게 보이기 때문","example":"태양 사진에서 검은 점으로 보이는 흑점"},"qs":[{"id":"S7-2-1-1","stem":"태양 표면에서 검게 보이는 부분은?","choices":["홍염","흑점","코로나","채층"],"answer":1,"explain":"흑점은 주변보다 온도가 낮아 어둡게 보이는 부분입니다.","d":0.26,"kind":"기억","cid":"S7-2-1","qid":"S7-2-1-1","title":"태양의 표면과 대기"},{"id":"S7-2-1-2","stem":"태양 대기에서 가장 바깥쪽에 있는 층은?","choices":["코로나","홍염","채층","흑점"],"answer":0,"explain":"태양 대기는 채층과 그 바깥쪽의 코로나로 이루어져 있습니다.","d":0.44,"kind":"기억","cid":"S7-2-1","qid":"S7-2-1-2","title":"태양의 표면과 대기"},{"id":"S7-2-1-3","stem":"태양 표면에 나타나는 무늬로 알맞은 것은?","choices":["쌀알무늬","꼬리","위상","고리"],"answer":0,"explain":"태양 표면에는 쌀알무늬와 흑점이 나타납니다.","d":0.56,"kind":"적용","cid":"S7-2-1","qid":"S7-2-1-3","title":"태양의 표면과 대기"},{"id":"S7-2-1-4","stem":"태양의 표면과 대기 설명으로 옳지 않은 것은?","choices":["흑점은 주변보다 온도가 낮다","흑점은 주변보다 밝게 빛난다","태양 대기에는 채층이 있다","태양 표면에는 쌀알무늬가 있다"],"answer":1,"explain":"흑점은 주변보다 온도가 낮아 어둡게 보입니다.","d":0.66,"kind":"적용","cid":"S7-2-1","qid":"S7-2-1-4","title":"태양의 표면과 대기"},{"id":"S7-2-1-5","stem":"태양 관측 사진에서 검은 점을 보았다. 이 점은?","choices":["위성","소행성","흑점","혜성"],"answer":2,"explain":"태양 표면에서 주변보다 어둡게 보이는 점은 흑점입니다.","d":0.76,"kind":"적용","cid":"S7-2-1","qid":"S7-2-1-5","title":"태양의 표면과 대기"},{"id":"S7-2-1-6","stem":"흑점이 어둡게 보이는 까닭은?","choices":["구름이 덮여서","주변보다 온도가 낮아서","태양 빛을 가려서","빛을 반사하지 않아서"],"answer":1,"explain":"흑점은 주변보다 온도가 낮아 상대적으로 어둡게 보입니다.","d":0.84,"kind":"추론","cid":"S7-2-1","qid":"S7-2-1-6","title":"태양의 표면과 대기"}]},{"id":"S7-2-2","title":"태양 활동이 지구에 미치는 영향","tier":3,"known":"오로라 사진을 본 적이 있어요.","fresh":"태양 활동이 활발해지면 태양풍이 강해져 오로라가 나타나고, 인공위성·통신·전력 시설에 장애가 생길 수 있습니다.","tip":"오로라 사진을 보며 지구에 미치는 영향을 함께 이야기해 보세요.","card":{"key":"태양 활동이 활발해지면 태양풍이 강해짐","easy":"태양이 활발해지면 지구에도 영향이 생김","why":"강해진 태양풍이 지구 대기와 시설에 작용하기 때문","example":"극지방 밤하늘에 나타나는 오로라"},"qs":[{"id":"S7-2-2-1","stem":"태양 활동이 활발해지면 지구에서 나타나는 현상은?","choices":["오로라","월식","일식","조석"],"answer":0,"explain":"태양 활동이 활발해지면 태양풍이 강해져 오로라가 나타납니다.","d":0.32,"kind":"기억","cid":"S7-2-2","qid":"S7-2-2-1","title":"태양 활동이 지구에 미치는 영향"},{"id":"S7-2-2-2","stem":"태양 활동이 활발해지면 강해지는 것은?","choices":["중력","지구 자전 속도","달의 인력","태양풍"],"answer":3,"explain":"태양 활동이 활발해지면 태양풍이 강해집니다.","d":0.48,"kind":"기억","cid":"S7-2-2","qid":"S7-2-2-2","title":"태양 활동이 지구에 미치는 영향"},{"id":"S7-2-2-3","stem":"태양 활동으로 생길 수 있는 피해로 알맞은 것은?","choices":["인공위성과 통신 장애","달이 보이지 않는다","행성의 수가 늘어난다","지구가 자전을 멈춘다"],"answer":0,"explain":"태양풍이 강해지면 인공위성·통신·전력 시설에 장애가 생길 수 있습니다.","d":0.6,"kind":"적용","cid":"S7-2-2","qid":"S7-2-2-3","title":"태양 활동이 지구에 미치는 영향"},{"id":"S7-2-2-4","stem":"태양 활동의 영향으로 옳지 않은 것은?","choices":["지구의 공전 주기가 짧아진다","인공위성이 고장 날 수 있다","오로라가 나타날 수 있다","통신 장애가 생길 수 있다"],"answer":0,"explain":"태양 활동은 통신·위성·전력에 영향을 주지만 지구 공전 주기는 바꾸지 않습니다.","d":0.7,"kind":"적용","cid":"S7-2-2","qid":"S7-2-2-4","title":"태양 활동이 지구에 미치는 영향"},{"id":"S7-2-2-5","stem":"극지방 여행에서 밤하늘에 빛의 띠를 보았다. 원인은?","choices":["월식","일식","강해진 태양풍","혜성의 꼬리"],"answer":2,"explain":"강해진 태양풍이 지구 대기와 부딪혀 오로라가 나타납니다.","d":0.79,"kind":"적용","cid":"S7-2-2","qid":"S7-2-2-5","title":"태양 활동이 지구에 미치는 영향"},{"id":"S7-2-2-6","stem":"태양 활동이 활발할 때 통신 장애가 늘어나는 까닭은?","choices":["달이 지구를 가리므로","태양풍이 강해져 위성에 영향을 주므로","지구가 자전을 빨리 하므로","행성의 수가 늘어나므로"],"answer":1,"explain":"강해진 태양풍이 인공위성과 통신 시설에 장애를 일으킵니다.","d":0.85,"kind":"추론","cid":"S7-2-2","qid":"S7-2-2-6","title":"태양 활동이 지구에 미치는 영향"}]}]},{"id":"S7-3","title":"7-3. 천체의 겉보기 운동과 별자리","concepts":[{"id":"S7-3-1","title":"지구 자전에 의한 겉보기 운동","tier":2,"known":"밤에 별이 조금씩 움직이는 것처럼 보여요.","fresh":"지구가 하루에 한 번 자전하기 때문에 별이 동쪽에서 서쪽으로 도는 것처럼 보이며, 이를 일주운동이라고 합니다.","tip":"밤에 같은 별을 10분 간격으로 두 번 관찰해 보게 하세요.","card":{"key":"별이 하루 동안 동에서 서로 도는 것처럼 보임 = 일주운동","easy":"밤새 별이 동에서 서로 옮겨 가는 것처럼 보임","why":"실제로 도는 것은 지구이고 별은 가만히 있기 때문","example":"10분 뒤 다시 보면 별이 서쪽으로 조금 옮겨 있음"},"qs":[{"id":"S7-3-1-1","stem":"별이 동쪽에서 서쪽으로 도는 것처럼 보이는 운동은?","choices":["일식","달의 위상 변화","혜성의 꼬리 운동","일주운동"],"answer":3,"explain":"별이 하루 동안 동에서 서로 도는 것처럼 보이는 운동을 일주운동이라 합니다.","d":0.26,"kind":"기억","cid":"S7-3-1","qid":"S7-3-1-1","title":"지구 자전에 의한 겉보기 운동"},{"id":"S7-3-1-2","stem":"별이 하루에 한 번 도는 것처럼 보이는 까닭은?","choices":["별이 지구를 돌기 때문","지구가 공전하기 때문","지구가 자전하기 때문","달이 움직이기 때문"],"answer":2,"explain":"지구가 하루에 한 번 자전해 별이 도는 것처럼 보입니다.","d":0.44,"kind":"기억","cid":"S7-3-1","qid":"S7-3-1-2","title":"지구 자전에 의한 겉보기 운동"},{"id":"S7-3-1-3","stem":"별의 일주운동 방향으로 알맞은 것은?","choices":["동쪽에서 서쪽으로","서쪽에서 동쪽으로","북쪽에서 남쪽으로","남쪽에서 북쪽으로"],"answer":0,"explain":"지구 자전 때문에 별은 동쪽에서 서쪽으로 도는 것처럼 보입니다.","d":0.56,"kind":"적용","cid":"S7-3-1","qid":"S7-3-1-3","title":"지구 자전에 의한 겉보기 운동"},{"id":"S7-3-1-4","stem":"별의 일주운동 설명으로 옳지 않은 것은?","choices":["지구 자전 때문에 나타난다","실제로 별이 도는 것은 아니다","지구 공전 때문에 나타난다","하루를 주기로 일어난다"],"answer":2,"explain":"일주운동은 지구 자전 때문에 나타나는 겉보기 운동입니다.","d":0.66,"kind":"적용","cid":"S7-3-1","qid":"S7-3-1-4","title":"지구 자전에 의한 겉보기 운동"},{"id":"S7-3-1-5","stem":"10분 뒤 같은 별이 서쪽으로 옮겨 보였다. 까닭은?","choices":["별이 실제로 이동하기 때문","달이 별을 가리기 때문","지구가 공전하기 때문","지구가 자전하기 때문"],"answer":3,"explain":"지구가 자전해 별이 서쪽으로 움직이는 것처럼 보입니다.","d":0.76,"kind":"적용","cid":"S7-3-1","qid":"S7-3-1-5","title":"지구 자전에 의한 겉보기 운동"},{"id":"S7-3-1-6","stem":"별의 일주운동을 겉보기 운동이라 하는 까닭은?","choices":["별의 밝기가 변하기 때문","실제로는 지구가 돌기 때문","밤에만 보이기 때문","별이 실제로 돌기 때문"],"answer":1,"explain":"실제로는 지구가 자전하고 별이 도는 것처럼 보이므로 겉보기 운동입니다.","d":0.84,"kind":"추론","cid":"S7-3-1","qid":"S7-3-1-6","title":"지구 자전에 의한 겉보기 운동"}]},{"id":"S7-3-2","title":"북극성의 위치","tier":2,"known":"북극성은 항상 같은 자리에 있다고 들었어요.","fresh":"북극성은 지구 자전축의 연장선 근처에 있어 거의 움직이지 않는 것처럼 보이고, 지평선에서의 높이가 관측 지방의 위도와 같습니다.","tip":"북쪽 하늘에서 북극성을 함께 찾아보세요.","card":{"key":"북극성은 자전축 연장선 근처, 높이 = 그 지방의 위도","easy":"밤새 거의 움직이지 않는 북쪽 하늘의 별","why":"지구가 자전축을 중심으로 돌기 때문","example":"북쪽 하늘에서 밤새 같은 자리에 보이는 별"},"qs":[{"id":"S7-3-2-1","stem":"북극성의 위치가 거의 변하지 않는 까닭은?","choices":["달 옆에 있어서","지구 자전축의 연장선 근처에 있어서","별자리 안에 있어서","태양 가까이에 있어서"],"answer":1,"explain":"북극성은 지구 자전축의 연장선 근처에 있어 거의 움직이지 않는 것처럼 보입니다.","d":0.32,"kind":"기억","cid":"S7-3-2","qid":"S7-3-2-1","title":"북극성의 위치"},{"id":"S7-3-2-2","stem":"북극성의 지평선 위 높이는 무엇과 같은가?","choices":["달의 위상","태양의 고도","관측 지방의 위도","지구의 공전 속도"],"answer":2,"explain":"북극성의 지평선에서의 높이는 관측 지방의 위도와 같습니다.","d":0.48,"kind":"기억","cid":"S7-3-2","qid":"S7-3-2-2","title":"북극성의 위치"},{"id":"S7-3-2-3","stem":"북극성이 보이는 하늘 방향은?","choices":["북쪽","남쪽","서쪽","동쪽"],"answer":0,"explain":"북극성은 북쪽 하늘에서 찾을 수 있습니다.","d":0.6,"kind":"적용","cid":"S7-3-2","qid":"S7-3-2-3","title":"북극성의 위치"},{"id":"S7-3-2-4","stem":"북극성에 대한 설명으로 옳지 않은 것은?","choices":["거의 움직이지 않는 것처럼 보인다","지구 자전축 연장선 근처에 있다","하루 동안 크게 돌며 움직인다","지평선 위 높이가 위도와 같다"],"answer":2,"explain":"북극성은 자전축 연장선 근처라 거의 움직이지 않는 것처럼 보입니다.","d":0.7,"kind":"적용","cid":"S7-3-2","qid":"S7-3-2-4","title":"북극성의 위치"},{"id":"S7-3-2-5","stem":"북극성의 지평선 위 높이로 알 수 있는 것은?","choices":["현재 시각","현재 계절","달의 위상","관측 지방의 위도"],"answer":3,"explain":"북극성의 지평선 위 높이는 관측 지방의 위도와 같습니다.","d":0.79,"kind":"적용","cid":"S7-3-2","qid":"S7-3-2-5","title":"북극성의 위치"},{"id":"S7-3-2-6","stem":"밤에 별들이 북극성 둘레를 도는 것처럼 보이는 까닭은?","choices":["별이 북극성을 돌기 때문","지구가 자전하기 때문","지구가 공전하기 때문","달이 움직이기 때문"],"answer":1,"explain":"지구가 자전축을 중심으로 자전해 별들이 북극성 둘레를 도는 것처럼 보입니다.","d":0.85,"kind":"추론","cid":"S7-3-2","qid":"S7-3-2-6","title":"북극성의 위치"}]},{"id":"S7-3-3","title":"지구 공전에 의한 별자리 변화","tier":3,"known":"겨울에는 오리온자리, 여름에는 백조자리를 봐요.","fresh":"지구가 태양 주위를 공전해 밤에 바라보는 하늘 방향이 달라지므로 계절마다 다른 별자리가 보입니다.","tip":"계절별 별자리 그림을 함께 찾아보세요.","card":{"key":"지구 공전으로 밤하늘 방향이 달라져 계절별 별자리가 바뀜","easy":"계절마다 보이는 별자리가 달라짐","why":"밤에 바라보는 하늘 방향이 달라지기 때문","example":"겨울 오리온자리, 여름 백조자리"},"qs":[{"id":"S7-3-3-1","stem":"계절마다 다른 별자리가 보이는 까닭은?","choices":["지구가 자전하기 때문","별이 계절마다 새로 생기기 때문","달이 지구를 돌기 때문","지구가 태양 주위를 공전하기 때문"],"answer":3,"explain":"지구가 태양 주위를 공전해 밤에 보는 하늘 방향이 달라지기 때문입니다.","d":0.26,"kind":"기억","cid":"S7-3-3","qid":"S7-3-3-1","title":"지구 공전에 의한 별자리 변화"},{"id":"S7-3-3-2","stem":"지구 공전으로 계절마다 달라지는 것은?","choices":["태양의 크기","지구의 자전 속도","달의 크기","밤에 보이는 별자리"],"answer":3,"explain":"공전으로 밤에 바라보는 하늘 방향이 달라져 별자리가 달라집니다.","d":0.44,"kind":"기억","cid":"S7-3-3","qid":"S7-3-3-2","title":"지구 공전에 의한 별자리 변화"},{"id":"S7-3-3-3","stem":"겨울 밤에 볼 수 있는 별자리는?","choices":["오리온자리","백조자리","여름철 별자리","북극성"],"answer":0,"explain":"겨울에는 오리온자리, 여름에는 백조자리를 볼 수 있습니다.","d":0.56,"kind":"적용","cid":"S7-3-3","qid":"S7-3-3-3","title":"지구 공전에 의한 별자리 변화"},{"id":"S7-3-3-4","stem":"별자리 변화에 대한 설명으로 옳지 않은 것은?","choices":["계절마다 보이는 별자리가 다르다","겨울에는 오리온자리가 보인다","별자리는 매일 새로 생겨난다","지구의 공전 때문에 나타난다"],"answer":2,"explain":"별자리는 새로 생기는 것이 아니라 공전으로 보이는 방향이 달라집니다.","d":0.66,"kind":"적용","cid":"S7-3-3","qid":"S7-3-3-4","title":"지구 공전에 의한 별자리 변화"},{"id":"S7-3-3-5","stem":"여름엔 백조자리, 겨울엔 오리온자리가 보인다. 까닭은?","choices":["달이 별자리를 가려서","지구가 공전해 밤하늘 방향이 달라져서","지구가 자전해서","별이 계절을 따라 이동해서"],"answer":1,"explain":"지구가 공전해 계절마다 밤에 바라보는 하늘 방향이 달라집니다.","d":0.76,"kind":"적용","cid":"S7-3-3","qid":"S7-3-3-5","title":"지구 공전에 의한 별자리 변화"},{"id":"S7-3-3-6","stem":"같은 시각에 관측해도 반년 뒤 별자리가 달라지는 까닭은?","choices":["지구가 반년 동안 공전 궤도의 반대편에 있기 때문","지구가 자전축을 중심으로 돌기 때문","태양이 별자리를 바꾸기 때문","별이 지구를 도는 주기가 반년이기 때문"],"answer":0,"explain":"지구가 공전해 반년 뒤에는 밤에 바라보는 하늘 방향이 반대가 됩니다.","d":0.84,"kind":"추론","cid":"S7-3-3","qid":"S7-3-3-6","title":"지구 공전에 의한 별자리 변화"}]}]},{"id":"S7-4","title":"7-4. 달의 위상 변화와 일식·월식","concepts":[{"id":"S7-4-1","title":"달의 위상 변화","tier":2,"known":"보름달과 초승달을 본 적이 있어요.","fresh":"달의 위상은 삭 → 초승달 → 상현달 → 망 → 하현달 → 그믐달 순으로 약 29.5일을 주기로 변합니다.","tip":"한 달 동안 같은 시각에 달 사진을 찍어보게 하세요.","card":{"key":"삭 → 초승달 → 상현달 → 망 → 하현달 → 그믐달, 약 29.5일","easy":"달 모양이 한 달 동안 둥글었다가 다시 작아짐","why":"달의 위상이 약 29.5일을 주기로 변하기 때문","example":"같은 시각에 한 달 동안 찍은 달 사진"},"qs":[{"id":"S7-4-1-1","stem":"달의 위상이 변하는 주기는 약 얼마인가?","choices":["약 29.5일","약 365일","약 24시간","약 7일"],"answer":0,"explain":"달의 위상은 약 29.5일을 주기로 변합니다.","d":0.26,"kind":"기억","cid":"S7-4-1","qid":"S7-4-1-1","title":"달의 위상 변화"},{"id":"S7-4-1-2","stem":"달의 위상 변화에서 망 다음에 오는 것은?","choices":["삭","상현달","초승달","하현달"],"answer":3,"explain":"망 다음에는 하현달, 그 다음 그믐달 순으로 변합니다.","d":0.44,"kind":"기억","cid":"S7-4-1","qid":"S7-4-1-2","title":"달의 위상 변화"},{"id":"S7-4-1-3","stem":"달의 위상 변화 순서로 알맞은 것은?","choices":["삭 → 초승달 → 상현달","망 → 삭 → 상현달","초승달 → 삭 → 망","삭 → 망 → 초승달"],"answer":0,"explain":"삭 → 초승달 → 상현달 → 망 → 하현달 → 그믐달 순으로 변합니다.","d":0.56,"kind":"적용","cid":"S7-4-1","qid":"S7-4-1-3","title":"달의 위상 변화"},{"id":"S7-4-1-4","stem":"달의 위상에 대한 설명으로 옳지 않은 것은?","choices":["보름달을 망이라고도 한다","달의 위상은 하루 만에 모두 변한다","삭 다음에 초승달이 온다","약 29.5일을 주기로 변한다"],"answer":1,"explain":"달의 위상은 약 29.5일에 걸쳐 서서히 변합니다.","d":0.66,"kind":"적용","cid":"S7-4-1","qid":"S7-4-1-4","title":"달의 위상 변화"},{"id":"S7-4-1-5","stem":"한 달 동안 같은 시각에 달 사진을 찍었다. 무엇을 알 수 있는가?","choices":["달의 모양이 주기적으로 변한다","달이 태양을 가린다","달의 크기가 점점 커진다","달이 스스로 빛난다"],"answer":0,"explain":"같은 시각에 찍은 사진에서 달의 위상이 약 29.5일 주기로 변함을 봅니다.","d":0.76,"kind":"적용","cid":"S7-4-1","qid":"S7-4-1-5","title":"달의 위상 변화"},{"id":"S7-4-1-6","stem":"보름달이 지난 뒤 달이 점점 작아 보이는 까닭은?","choices":["달의 위상이 변하기 때문","달이 지구에서 멀어져서","구름이 달을 가려서","달이 태양 빛을 잃어서"],"answer":0,"explain":"시간이 지나며 달의 위상이 망에서 하현달, 그믐달로 변하기 때문입니다.","d":0.84,"kind":"추론","cid":"S7-4-1","qid":"S7-4-1-6","title":"달의 위상 변화"}]},{"id":"S7-4-2","title":"달의 위상이 변하는 까닭","tier":3,"known":"달은 스스로 빛나지 않는다고 배웠어요.","fresh":"달은 태양 빛을 반사해 밝게 보이는데, 달이 지구 주위를 공전해 태양·지구·달의 위치 관계가 달라지므로 밝게 보이는 부분이 변합니다.","tip":"손전등과 공으로 달의 위상을 함께 재현해 보세요.","card":{"key":"달은 태양 빛을 반사하고, 공전으로 위치 관계가 달라짐","easy":"달이 반사하는 빛의 부분이 달라져 모양이 변함","why":"달이 지구 주위를 공전해 위치 관계가 달라지기 때문","example":"손전등(태양)과 공(달)으로 위상 재현"},"qs":[{"id":"S7-4-2-1","stem":"달이 밝게 보이는 까닭은?","choices":["별 빛을 모으기 때문","지구 빛을 반사하기 때문","스스로 빛을 내기 때문","태양 빛을 반사하기 때문"],"answer":3,"explain":"달은 스스로 빛을 내지 못하고 태양 빛을 반사해 밝게 보입니다.","d":0.32,"kind":"기억","cid":"S7-4-2","qid":"S7-4-2-1","title":"달의 위상이 변하는 까닭"},{"id":"S7-4-2-2","stem":"달이 지구 주위를 도는 운동을 무엇이라 하는가?","choices":["공전","자전","일주운동","연주운동"],"answer":0,"explain":"달은 지구 주위를 공전하며 그 위치가 계속 달라집니다.","d":0.48,"kind":"기억","cid":"S7-4-2","qid":"S7-4-2-2","title":"달의 위상이 변하는 까닭"},{"id":"S7-4-2-3","stem":"달의 위상이 달라지는 직접적인 까닭은?","choices":["지구가 자전해서","태양·지구·달의 위치 관계가 달라져서","달의 크기가 변해서","달의 밝기가 변해서"],"answer":1,"explain":"달이 공전해 태양·지구·달의 위치 관계가 달라지며 밝게 보이는 부분이 변합니다.","d":0.6,"kind":"적용","cid":"S7-4-2","qid":"S7-4-2-3","title":"달의 위상이 변하는 까닭"},{"id":"S7-4-2-4","stem":"달의 위상 변화 설명으로 옳지 않은 것은?","choices":["달은 스스로 빛을 내어 밝다","달은 태양 빛을 반사해 밝게 보인다","위치 관계가 달라지면 위상이 변한다","달은 지구 주위를 공전한다"],"answer":0,"explain":"달은 스스로 빛을 내지 않고 태양 빛을 반사합니다.","d":0.7,"kind":"적용","cid":"S7-4-2","qid":"S7-4-2-4","title":"달의 위상이 변하는 까닭"},{"id":"S7-4-2-5","stem":"손전등과 공으로 달의 위상을 재현할 때 공은 무엇에 해당하는가?","choices":["태양","달","별","지구"],"answer":1,"explain":"손전등은 태양, 공은 달, 관찰하는 사람은 지구에 해당합니다.","d":0.79,"kind":"적용","cid":"S7-4-2","qid":"S7-4-2-5","title":"달의 위상이 변하는 까닭"},{"id":"S7-4-2-6","stem":"보름달일 때 달이 가장 둥글게 보이는 까닭은?","choices":["태양 빛을 받는 면이 지구를 향해서","지구 그림자가 없어져서","달이 지구에 가장 가까워져서","달이 스스로 밝아져서"],"answer":0,"explain":"태양 빛을 받는 달의 면 전체가 지구를 향할 때 망이 되어 둥글게 보입니다.","d":0.85,"kind":"추론","cid":"S7-4-2","qid":"S7-4-2-6","title":"달의 위상이 변하는 까닭"}]},{"id":"S7-4-3","title":"일식과 월식","tier":3,"known":"일식과 월식이라는 말을 들어봤어요.","fresh":"일식은 달이 태양을 가리는 현상으로 태양-달-지구 순서일 때, 월식은 달이 지구 그림자에 들어가는 현상으로 태양-지구-달 순서일 때 일어납니다.","tip":"개기월식 사진을 보며 천체의 순서를 함께 확인해 보세요.","card":{"key":"일식은 태양-달-지구, 월식은 태양-지구-달","easy":"달이 태양을 가리면 일식, 그림자에 들어가면 월식","why":"세 천체가 일직선으로 놓여 가리기 때문","example":"개기월식 사진에서 달이 어두워진 모습"},"qs":[{"id":"S7-4-3-1","stem":"일식이 일어날 때 천체의 순서는?","choices":["지구-달-태양","태양-달-지구","태양-지구-달","달-지구-태양"],"answer":1,"explain":"일식은 달이 태양을 가리는 현상으로 태양-달-지구 순서일 때 일어납니다.","d":0.26,"kind":"기억","cid":"S7-4-3","qid":"S7-4-3-1","title":"일식과 월식"},{"id":"S7-4-3-2","stem":"월식이 일어날 때 천체의 순서는?","choices":["지구-태양-달","태양-달-지구","달-태양-지구","태양-지구-달"],"answer":3,"explain":"월식은 달이 지구 그림자에 들어가는 현상으로 태양-지구-달 순서입니다.","d":0.44,"kind":"기억","cid":"S7-4-3","qid":"S7-4-3-2","title":"일식과 월식"},{"id":"S7-4-3-3","stem":"달이 태양을 가리는 현상은?","choices":["월식","망","일주운동","일식"],"answer":3,"explain":"달이 태양을 가리면 일식, 달이 지구 그림자에 들어가면 월식입니다.","d":0.56,"kind":"적용","cid":"S7-4-3","qid":"S7-4-3-3","title":"일식과 월식"},{"id":"S7-4-3-4","stem":"일식과 월식 설명으로 옳지 않은 것은?","choices":["월식은 태양-지구-달 순서 때 일어난다","일식은 태양-달-지구 순서 때 일어난다","월식은 달이 지구 그림자에 들어갈 때 일어난다","일식은 달이 지구 그림자에 들어갈 때 일어난다"],"answer":3,"explain":"달이 지구 그림자에 들어가는 것은 월식입니다.","d":0.66,"kind":"적용","cid":"S7-4-3","qid":"S7-4-3-4","title":"일식과 월식"},{"id":"S7-4-3-5","stem":"개기월식 사진에서 천체의 상태는?","choices":["지구가 태양을 가리고 있다","달이 지구 그림자 속에 있다","달이 태양 뒤에 있다","달이 태양을 가리고 있다"],"answer":1,"explain":"월식은 달이 지구 그림자에 들어가 어두워지는 현상입니다.","d":0.76,"kind":"적용","cid":"S7-4-3","qid":"S7-4-3-5","title":"일식과 월식"},{"id":"S7-4-3-6","stem":"일식이 일어날 때 태양이 가려지는 까닭은?","choices":["달이 지구 그림자에 들어서","달이 태양 앞을 지나서","지구가 달을 가려서","지구가 태양 앞을 지나서"],"answer":1,"explain":"달이 태양과 지구 사이를 지나며 태양을 가려 일식이 일어납니다.","d":0.84,"kind":"추론","cid":"S7-4-3","qid":"S7-4-3-6","title":"일식과 월식"}]}]}]}],"flat":[{"id":"S4-1-1","title":"입자의 운동","tier":1,"unit":"S4","sec":"4-1. 확산과 증발"},{"id":"S4-1-2","title":"확산","tier":2,"unit":"S4","sec":"4-1. 확산과 증발"},{"id":"S4-1-3","title":"증발","tier":2,"unit":"S4","sec":"4-1. 확산과 증발"},{"id":"S4-2-1","title":"세 가지 상태의 입자 배열","tier":1,"unit":"S4","sec":"4-2. 물질의 상태 변화"},{"id":"S4-2-2","title":"여섯 가지 상태 변화","tier":1,"unit":"S4","sec":"4-2. 물질의 상태 변화"},{"id":"S4-2-3","title":"상태 변화와 입자 배열·부피","tier":2,"unit":"S4","sec":"4-2. 물질의 상태 변화"},{"id":"S4-2-4","title":"상태 변화는 물리적 변화","tier":3,"unit":"S4","sec":"4-2. 물질의 상태 변화"},{"id":"S4-3-1","title":"열에너지의 흡수와 방출","tier":2,"unit":"S4","sec":"4-3. 상태 변화와 열에너지"},{"id":"S4-3-2","title":"온도-시간 그래프의 평평한 구간","tier":3,"unit":"S4","sec":"4-3. 상태 변화와 열에너지"},{"id":"S4-3-3","title":"융해열과 기화열","tier":3,"unit":"S4","sec":"4-3. 상태 변화와 열에너지"},{"id":"S4-3-4","title":"상태 변화와 열에너지의 이용","tier":2,"unit":"S4","sec":"4-3. 상태 변화와 열에너지"},{"id":"S5-1-1","title":"힘의 뜻과 단위","tier":1,"unit":"S5","sec":"5-1. 힘의 표현과 합성"},{"id":"S5-1-2","title":"힘의 삼요소와 화살표 표현","tier":1,"unit":"S5","sec":"5-1. 힘의 표현과 합성"},{"id":"S5-1-3","title":"힘의 합성과 합력","tier":3,"unit":"S5","sec":"5-1. 힘의 표현과 합성"},{"id":"S5-2-1","title":"중력과 무게","tier":2,"unit":"S5","sec":"5-2. 여러 가지 힘"},{"id":"S5-2-2","title":"탄성력","tier":2,"unit":"S5","sec":"5-2. 여러 가지 힘"},{"id":"S5-2-3","title":"마찰력","tier":2,"unit":"S5","sec":"5-2. 여러 가지 힘"},{"id":"S5-2-4","title":"부력","tier":3,"unit":"S5","sec":"5-2. 여러 가지 힘"},{"id":"S5-3-1","title":"알짜힘","tier":2,"unit":"S5","sec":"5-3. 힘의 평형과 물체의 운동"},{"id":"S5-3-2","title":"두 힘의 평형 조건","tier":2,"unit":"S5","sec":"5-3. 힘의 평형과 물체의 운동"},{"id":"S5-3-3","title":"알짜힘과 물체의 운동","tier":2,"unit":"S5","sec":"5-3. 힘의 평형과 물체의 운동"},{"id":"S5-3-4","title":"여러 가지 힘의 평형 사례","tier":3,"unit":"S5","sec":"5-3. 힘의 평형과 물체의 운동"},{"id":"S7-1-1","title":"태양계를 구성하는 천체","tier":1,"unit":"S7","sec":"7-1. 태양계의 구성"},{"id":"S7-1-2","title":"지구형 행성과 목성형 행성","tier":2,"unit":"S7","sec":"7-1. 태양계의 구성"},{"id":"S7-1-3","title":"소행성·혜성·왜소행성","tier":2,"unit":"S7","sec":"7-1. 태양계의 구성"},{"id":"S7-2-1","title":"태양의 표면과 대기","tier":3,"unit":"S7","sec":"7-2. 태양의 특징과 활동"},{"id":"S7-2-2","title":"태양 활동이 지구에 미치는 영향","tier":3,"unit":"S7","sec":"7-2. 태양의 특징과 활동"},{"id":"S7-3-1","title":"지구 자전에 의한 겉보기 운동","tier":2,"unit":"S7","sec":"7-3. 천체의 겉보기 운동과 별자리"},{"id":"S7-3-2","title":"북극성의 위치","tier":2,"unit":"S7","sec":"7-3. 천체의 겉보기 운동과 별자리"},{"id":"S7-3-3","title":"지구 공전에 의한 별자리 변화","tier":3,"unit":"S7","sec":"7-3. 천체의 겉보기 운동과 별자리"},{"id":"S7-4-1","title":"달의 위상 변화","tier":2,"unit":"S7","sec":"7-4. 달의 위상 변화와 일식·월식"},{"id":"S7-4-2","title":"달의 위상이 변하는 까닭","tier":3,"unit":"S7","sec":"7-4. 달의 위상 변화와 일식·월식"},{"id":"S7-4-3","title":"일식과 월식","tier":3,"unit":"S7","sec":"7-4. 달의 위상 변화와 일식·월식"}],"meta":{"title":"80-20 적응학습 (중학교 1학년 과학)","sub":"중1 과학 · 물질의 상태 변화 · 힘의 작용 · 태양계","source":"미래엔 중학교 과학 1 (2022 개정) 4·5·7단원 · 교육과정 성취기준","version":"sr-sci1-v1","nConcept":33,"nQuestion":198,"store":"s8020sci","course":"science","portal":true,"prompt":"중학교 1학년 과학(물질의 상태 변화·힘의 작용·태양계) 학습 문항을 새로 만들어 주세요."}};
+
+/* ── 데이터 평탄화 ── */
+const ALLC = [], ALLQ = [];
+BANK.units.forEach(u => u.sections.forEach(s => s.concepts.forEach(c => {
+  const cc = {...c, unit:u.id, sec:s.title, secId:s.id};
+  ALLC.push(cc);
+  c.qs.forEach(q => ALLQ.push({...q, cid:c.id, unit:u.id, secId:s.id, tier:c.tier}));
+})));
+const BYID = {}; ALLC.forEach(c => BYID[c.id] = c);
+const BADGE = BANK.meta;
+
+/* ── 저장 계층 (프로필별) ──
+   store: 코스별 키 접두어. 사회는 'sr8020' 고정(기존 기록 보존), 영어는 별도 접두어를 쓴다. */
+const NS = (BANK.meta && BANK.meta.store) || 'sr8020';
+const IDXKEY = NS + '_index_v1';                 // 프로필 목록
+const STATE_PREFIX = NS + '_state_v1_';          // 프로필별 학습 기록
+/* Phase 2: 원격 저장소(Cloudflare D1 등)가 준비되면 url만 채우면 된다. 비워두면 로컬 전용. */
+const REMOTE = { url: '' };
+let IDX = null, S = null, syncTimer = null, sugMuted = false;
+const TIER_TH = {1:0.50, 2:0.46, 3:0.42};
+
+/* ── 포탈 허브 연동 ──
+   meta.portal 로 열리면 프로필 목록 대신 허브의 학습자 한 명을 쓴다.
+   허브가 없으면(파일 단독 실행) 기존 자체 프로필 목록으로 그대로 동작한다. */
+const HUBKEY = 's8020_hub_v1';
+const PORTAL = !!(BANK.meta && BANK.meta.portal);
+function loadHub(){
+  try{ const r = localStorage.getItem(HUBKEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
+}
+function saveHub(h){ try{ localStorage.setItem(HUBKEY, JSON.stringify(h)); }catch(e){} }
+function urlKid(){ const m = location.search.match(/[?&]kid=([^&]+)/); return m ? decodeURIComponent(m[1]) : null; }
+/* 학습자는 과목을 여러 개 가질 수 있다(hub v2). v1(과목 1개)은 읽을 때 승계한다. */
+const COURSE = (BANK.meta && BANK.meta.course) || '';
+function kidHas(k, cid){ return Array.isArray(k.courses) ? k.courses.includes(cid) : k.course === cid; }
+function kidDiff(k, cid){
+  if(k.diff && typeof k.diff === 'object') return (k.diff[cid] | 0) || 0;
+  return (k.diff | 0) || 0;
+}
+function portalKid(){
+  const h = loadHub(); if(!h || !Array.isArray(h.kids) || !h.kids.length) return null;
+  const want = urlKid();
+  return h.kids.find(k => k.id === want) || h.kids.find(k => kidHas(k, COURSE)) || null;
+}
+function hubSaveDiff(pid, idx){
+  const h = loadHub(); if(!h) return;
+  const k = h.kids.find(x => x.id === pid); if(!k) return;
+  if(!Array.isArray(k.courses)){                     /* v1 → v2 승계 */
+    const c0 = k.course || COURSE;
+    k.diff = {}; k.diff[c0] = (k.diff | 0) || 0;
+    k.courses = [c0];
+  }
+  if(!k.diff || typeof k.diff !== 'object') k.diff = {};
+  if(k.courses.indexOf(COURSE) < 0) k.courses.push(COURSE);   /* 이 코스를 처음 열면 자동 등록 */
+  k.diff[COURSE] = idx | 0;
+  k.course = undefined;
+  h.v = 2;
+  saveHub(h);
+}
+
+function blank(){
+  const c = {};
+  ALLC.forEach(x => c[x.id] = {th:TIER_TH[x.tier]||0.45, n:0, ok:0, ng:0, streak:0, last:null, first:null});
+  return {v:BANK.meta.version, diag:false, c:c, sess:[], extra:[]};
+}
+function loadIndex(){
+  if(PORTAL){
+    const k = portalKid();
+    if(k) return {profiles:[{id:k.id, name:k.name, diff:kidDiff(k, COURSE)}], current:k.id, portal:true};
+  }
+  let idx = null;
+  try{ const raw = localStorage.getItem(IDXKEY); if(raw) idx = JSON.parse(raw); }catch(e){}
+  if(!idx || !Array.isArray(idx.profiles) || !idx.profiles.length){
+    idx = {profiles:[{id:'p1', name:'학습자 1'}], current:'p1'};
+    try{ localStorage.setItem(IDXKEY, JSON.stringify(idx)); }catch(e){}
+  }
+  return idx;
+}
+function saveIndex(){
+  try{ localStorage.setItem(IDXKEY, JSON.stringify(IDX)); }catch(e){}
+  if(PORTAL){
+    try{ const p = curProf(); if(p) hubSaveDiff(p.id, (p.diff | 0) || 0); }catch(e){}
+  }
+}
+function curPid(){
+  if(!IDX.profiles.find(p => p.id === IDX.current)) IDX.current = IDX.profiles[0].id;
+  return IDX.current;
+}
+function stateKey(pid){ return STATE_PREFIX + pid; }
+function load(){
+  try{
+    const raw = localStorage.getItem(stateKey(curPid()));
+    if(raw){ const p = JSON.parse(raw); if(p && p.c){ mergeExtra(p); return p; } }
+  }catch(e){}
+  return blank();
+}
+function save(skipSync){
+  try{ localStorage.setItem(stateKey(curPid()), JSON.stringify(S)); }catch(e){ storeBroken = true; }
+  if(!skipSync) syncPush();
+}
+function syncPush(){
+  if(!REMOTE.url) return;
+  const pid = curPid();
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    try{
+      fetch(REMOTE.url + '/api/state?profile=' + encodeURIComponent(pid), {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(S)
+      }).catch(() => {});
+    }catch(e){}
+  }, 1200);
+}
+function syncPull(){
+  if(!REMOTE.url) return;
+  fetch(REMOTE.url + '/api/state?profile=' + encodeURIComponent(curPid()))
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      if(j && j.c && Array.isArray(j.sess) && j.sess.length > S.sess.length){
+        S = j; save(true); refreshExtra(); renderHome(); renderProfBar();
+        toast('다른 기기 기록을 불러왔어요');
+      }
+    }).catch(() => {});
+}
+
+/* ── 프로필 ── */
+function renderProfBar(){
+  if(PORTAL){
+    const p = curProf();
+    $('profbar').innerHTML = '<span class="pl">학습자</span>' +
+      `<button class="pchip on">${p ? p.name : '학습자'}</button>` +
+      '<button class="pchip add" onclick="location.href=\'index.html\'">포탈로</button>';
+    return;
+  }
+  $('profbar').innerHTML = '<span class="pl">학습자</span>' +
+    IDX.profiles.map(p => `<button class="pchip ${p.id === curPid() ? 'on' : ''}" onclick="pickProfile('${p.id}')">${p.name}</button>`).join('') +
+    '<button class="pchip add" onclick="addProfile()">+ 추가</button>';
+}
+function pickProfile(id){
+  save(true);
+  IDX.current = id; saveIndex();
+  S = load(); refreshExtra(); renderProfBar(); renderHome(); go('home');
+  toast('학습자를 바꿨어요');
+}
+function addProfile(){
+  const name = (prompt('새 학습자 이름 (12자 이내)') || '').trim().slice(0, 12);
+  if(!name) return;
+  save(true);
+  const id = 'p' + Date.now().toString(36);
+  IDX.profiles.push({id:id, name:name, diff:0});
+  IDX.current = id; saveIndex();
+  S = blank(); save(true);
+  refreshExtra(); renderProfBar(); renderHome(); go('home');
+  toast(name + ' 추가했어요');
+}
+
+/* ── 난이도 프리셋 (프로필별) ──
+   목표 정답률을 낮추면 엔진이 더 어려운 문항을 골라 실제 체감 난이도가 올라간다.
+   도전 슬롯 수를 함께 올려 새 개념 소진 속도도 같이 빨라진다. */
+const SESS_N = 15;
+const DIFFS = [
+  {name:'안정', target:0.85, ch:3, desc:'익숙 12 + 새 개념 3'},
+  {name:'도전', target:0.75, ch:4, desc:'익숙 11 + 새 개념 4'},
+  {name:'가속', target:0.65, ch:6, desc:'익숙 9 + 새 개념 6'}
+];
+function curProf(){ return IDX.profiles.find(p => p.id === curPid()) || IDX.profiles[0]; }
+function diffIdx(){ return Math.max(0, Math.min(DIFFS.length - 1, curProf().diff | 0)); }
+function curDiff(){ return DIFFS[diffIdx()]; }
+function setDiff(i){
+  curProf().diff = i; saveIndex();
+  renderDiffBar(); renderHome();
+  toast('난이도를 "' + DIFFS[i].name + '" 단계로 바꿨어요');
+}
+function chSlots(n){
+  const s = new Set();
+  for(let i=0;i<n;i++) s.add(Math.round((i+1) * SESS_N / (n+1)) - 1);
+  return s;
+}
+function renderDiffBar(){
+  const i = diffIdx(), D = DIFFS[i];
+  const b = document.querySelector('.head .badge');
+  if(b) b.textContent = '목표 정답률 ' + Math.round(D.target*100) + '%';
+  $('diffbar').innerHTML = '<span class="pl">난이도</span>' +
+    DIFFS.map((d,k) => `<button class="pchip ${k===i?'on':''}" onclick="setDiff(${k})">${d.name}</button>`).join('') +
+    `<span class="dinfo">목표 정답률 ${Math.round(D.target*100)}% · ${D.desc}</span>`;
+}
+let storeBroken = false;
+function cs(id){
+  if(!S.c[id]) S.c[id] = {th:TIER_TH[BYID[id]?BYID[id].tier:1]||0.45, n:0, ok:0, ng:0, streak:0, last:null, first:null};
+  return S.c[id];
+}
+
+/* AI로 추가한 문항 병합 */
+function buildExtra(){
+  return S.extra.map(e => ({...e, qid:'X'+e._i, id:'X'+e._i, title:(BYID[e.cid]||{title:e.cid}).title}));
+}
+function mergeExtra(p){
+  if(!p.extra || !p.extra.length) return;
+  p.extra.forEach((e,i) => { if(e._i === undefined) e._i = i; });
+}
+let EXTRA = [];
+function refreshExtra(){ EXTRA = buildExtra(); }
+
+/* ── 85% 적응 엔진 ── */
+const LOGI = 0.16;          // 능력-난이도 스케일
+const TP_GAP = 0.25;        // 도전 구간은 목표보다 이만큼 더 어렵게
+function tpReview(){ return curDiff().target; }
+function tpChall(){ return Math.max(0.45, curDiff().target - TP_GAP); }
+function pAt(th, d){ return 1/(1+Math.exp(-(th-d)/LOGI)); }
+function pool(){ return ALLQ.concat(EXTRA); }
+
+function pickQ(used, skipCid, challenge){
+  const tp = challenge ? tpChall() : tpReview();
+  let best = null, bs = 1e9;
+  for(const q of pool()){
+    if(used.has(q.qid)) continue;
+    if(skipCid && q.cid === skipCid) continue;
+    const st = cs(q.cid);
+    const p = pAt(st.th, q.d);
+    let sc = Math.abs(p - tp);
+    if(st.last === 'ng') sc -= 0.05;                 // 최근 틀린 개념 우선
+    if(st.n === 0 && !challenge) sc += 0.35;          // 안 본 개념은 도전 구간에서
+    if(st.streak >= 3) sc += 0.15;                    // 연속 정답은 잠시 멀리
+    if(sc < bs){ bs = sc; best = q; }
+  }
+  return best;
+}
+function unseen(){
+  return ALLC.filter(c => cs(c.id).n === 0).sort((a,b) => a.tier - b.tier);
+}
+function weakest(skipCid){
+  let best=null, bt=9;
+  ALLC.forEach(c => { const st=cs(c.id); if(st.n>0 && c.id!==skipCid && st.th<bt){ bt=st.th; best=c; } });
+  return best;
+}
+
+/* 세션 큐: 난이도 프리셋에 따라 익숙/도전 슬롯을 배분한다 */
+function buildSession(){
+  const used = new Set(), queue = [], CH = chSlots(curDiff().ch);
+  const introduced = new Set();
+  let lastCid = null;
+  for(let i=0;i<SESS_N;i++){
+    let q = null;
+    if(CH.has(i)){
+      const u = unseen().filter(c => !introduced.has(c.id));
+      let cand = null;
+      if(u.length){
+        introduced.add(u[0].id);
+        cand = pool().filter(x => x.cid === u[0].id && !used.has(x.qid))
+                     .sort((a,b) => a.d - b.d)[0];
+      }
+      q = cand || pickQ(used, lastCid, true);
+    } else {
+      q = pickQ(used, lastCid, false);
+    }
+    if(!q) q = pickQ(used, lastCid, !CH.has(i));
+    if(!q){ used.clear(); q = pickQ(used, lastCid, true); }
+    if(!q) break;
+    used.add(q.qid);
+    queue.push(q);
+    lastCid = q.cid;
+  }
+  return queue;
+}
+/* 진단: 12개념을 고르게 뽑고 난이도는 쉬움-보통-어려움 사다리로 섞는다 */
+function buildDiag(){
+  const pools = [];
+  BANK.units.forEach(u => u.sections.forEach(s => {
+    pools.push(s.concepts.map(c => c.qs.map(q => ({...q, cid:c.id, unit:u.id, secId:s.id, tier:c.tier}))
+                                 .sort((a,b) => a.d - b.d)));
+  }));
+  const pt = pools.map(() => 0), out = [];
+  const ladder = [0.3, 0.55, 0.8, 0.3, 0.55, 0.8, 0.3, 0.55, 0.8, 0.3, 0.55, 0.8];
+  let guard = 0;
+  while(out.length < 12 && guard++ < 20){
+    for(let p = 0; p < pools.length && out.length < 12; p++){
+      if(pt[p] >= pools[p].length) continue;
+      const qs = pools[p][pt[p]++];
+      const t = ladder[out.length];
+      out.push(qs.slice().sort((a,b) => Math.abs(a.d - t) - Math.abs(b.d - t))[0]);
+    }
+  }
+  return out.slice(0, 12);
+}
+
+/* ── 세션 상태 ── */
+let Q = [], idx = 0, ok = 0, ng = 0, wrongs = [], isDiag = false, introShown = {};
+
+function $(id){ return document.getElementById(id); }
+function show(id){ ['home','quiz','res','map','why','report'].forEach(x => $('sc-'+x).classList.add('hidden')); if(id) $('sc-'+id).classList.remove('hidden'); }
+function go(t){
+  show(t);
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  if(t === 'map') renderMap();
+  if(t === 'report') renderReport();
+  if(t === 'home') renderHome();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 1800);
+}
+
+/* ── 홈 ── */
+function renderHome(){
+  refreshExtra();
+  let learned = 0, totOk = 0, totN = 0, thSum = 0;
+  ALLC.forEach(c => { const st = cs(c.id); if(st.n > 0) learned++; totOk += st.ok; totN += st.n; thSum += st.th; });
+  const prog = Math.round(ALLC.reduce((a,c) => a + Math.min(1, cs(c.id).th), 0) / ALLC.length * 100);
+  $('k-c').textContent = learned + ' / ' + ALLC.length;
+  $('k-q').textContent = totN;
+  $('k-a').textContent = totN ? Math.round(totOk/totN*100) + '%' : '-';
+  $('home-fill').style.width = prog + '%';
+  $('home-pct').textContent = '개념 숙련도 ' + prog + '%';
+  $('home-meta').textContent = BADGE.nConcept + '개념 · ' + (BADGE.nQuestion + EXTRA.length) + '문항';
+  if(!S.diag){
+    $('home-title').textContent = '먼저 12문항 진단';
+    $('home-desc').textContent = '지금 어디까지 알고 있는지 12문항으로 가볍게 확인해요. 6분쯤 걸려요.';
+    $('home-btn').textContent = '진단 시작';
+    $('home-btn').onclick = startDiag;
+  } else {
+    const D = curDiff();
+    $('home-title').textContent = '오늘의 ' + SESS_N + '문항';
+    $('home-desc').textContent = '익숙한 ' + (SESS_N - D.ch) + '문항 + 새로 도전할 ' + D.ch +
+      '문항 · 목표 정답률 ' + Math.round(D.target * 100) + '%. 지금 실력에 맞춰 난이도가 자동으로 바뀌어요.';
+    $('home-btn').textContent = '학습 시작';
+    $('home-btn').onclick = startMain;
+  }
+  renderDiffSuggest();
+  const box = $('last-sess-box');
+  if(S.sess.length){
+    box.classList.remove('hidden');
+    const rows = S.sess.slice(-5).reverse().map(s =>
+      `<tr><td>${s.d}</td><td>${s.mode}</td><td>${s.ok}/${s.n}</td><td>${Math.round(s.ok/s.n*100)}%</td></tr>`).join('');
+    $('sess-tbl').innerHTML = '<tr><th>날짜</th><th>종류</th><th>정답</th><th>정답률</th></tr>' + rows;
+  } else { box.classList.add('hidden'); }
+}
+
+/* 난이도 자동 제안: 목표 대비 실제 정답률이 벗어나면 한 단계 조정을 권한다 */
+function suggestDiff(){
+  const i = diffIdx(), tg = DIFFS[i].target;
+  const learn = S.sess.filter(s => s.mode !== '진단').slice(-2);
+  if(learn.length < 2) return null;
+  const avg = learn.reduce((a,s) => a + s.ok / s.n, 0) / learn.length;
+  if(avg >= tg + 0.08 && i < DIFFS.length - 1)
+    return {to:i+1, up:true, avg:avg,
+            txt:'최근 2세션 정답률 ' + Math.round(avg*100) + '% · 목표 ' + Math.round(tg*100) +
+                '%보다 높아요. "' + DIFFS[i+1].name + '" 단계로 올려볼까요?'};
+  if(avg <= tg - 0.20 && i > 0)
+    return {to:i-1, up:false, avg:avg,
+            txt:'최근 2세션 정답률 ' + Math.round(avg*100) + '% · 목표 ' + Math.round(tg*100) +
+                '%보다 낮아요. "' + DIFFS[i-1].name + '" 단계로 낮춰볼까요?'};
+  return null;
+}
+function renderDiffSuggest(){
+  const s = sugMuted ? null : suggestDiff(), box = $('diff-sug');
+  if(!s){ box.className = 'hidden'; box.innerHTML = ''; return; }
+  box.className = '';
+  box.innerHTML = `<div class="card sug">
+    <div style="font-size:13.5px; font-weight:700">난이도 조정 제안</div>
+    <div class="muted" style="font-size:13px; margin-top:4px">${s.txt}</div>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn" onclick="setDiff(${s.to})">${s.up ? '한 단계 올리기' : '한 단계 낮추기'}</button>
+      <button class="btn ghost" onclick="sugMuted=true;renderDiffSuggest()">나중에</button>
+    </div></div>`;
+}
+
+/* ── 퀴즈 ── */
+function startDiag(){ Q = buildDiag(); isDiag = true; begin(); }
+function startMain(){ Q = buildSession(); isDiag = false; begin(); }
+function begin(){
+  idx = 0; ok = 0; ng = 0; wrongs = []; introShown = {};
+  go('quiz'); renderQ();
+}
+function quitQuiz(){ if(confirm('학습을 그만할까요? 지금까지 푼 기록은 저장돼요.')){ finish(true); } }
+function renderQ(){
+  const q = Q[idx];
+  $('q-prog').textContent = (idx+1) + ' / ' + Q.length;
+  $('q-tag').textContent = isDiag ? '진단' : (q.d >= 0.7 ? '도전' : '익숙 구간');
+  $('q-fill').style.width = (idx / Q.length * 100) + '%';
+  const st = cs(q.cid);
+  let html = '';
+  if(st.n === 0 && !introShown[q.cid]){
+    const c = BYID[q.cid];
+    html += `<div class="intro"><div class="top">새 개념 · ${c.title}</div><div class="body">
+      <div class="step"><div class="no">1</div><div class="tx"><span class="lb">먼저, 이건 이미 알아</span>${c.known}</div></div>
+      <div class="step"><div class="no">2</div><div class="tx"><span class="lb">여기서 한 칸만 더</span>${c.fresh}</div></div>
+      <div class="step new"><div class="no">3</div><div class="tx"><span class="lb">그래서 이렇게 기억해</span>${c.card.key}</div></div>
+      <div class="ratio">아는 맥락 90% + 새 맥락 10~20%</div>
+    </div></div>`;
+    introShown[q.cid] = 1;
+  }
+  html += `<div class="qnum">${isDiag ? '진단 문항' : '문항'} ${idx+1} · ${q.title}</div>
+    <div class="stem">${q.stem}</div>
+    <div id="choices">${q.choices.map((c,i) =>
+      `<button class="ch" data-i="${i}" onclick="answer(${i})"><span class="k">${'ABCD'[i]}</span><span>${c}</span></button>`).join('')}</div>
+    <div id="fb"></div>`;
+  $('q-area').innerHTML = html;
+}
+function answer(pick){
+  const q = Q[idx], st = cs(q.cid);
+  const correct = pick === q.answer;
+  document.querySelectorAll('.ch').forEach((b,i) => {
+    b.disabled = true;
+    if(i === q.answer) b.classList.add('ok');
+    else if(i === pick) b.classList.add('no');
+  });
+  const p = pAt(st.th, q.d);
+  const K = isDiag ? 0.22 : 0.14;
+  if(correct){
+    ok++;
+    st.th = Math.min(1, st.th + K * (1 - p));
+    st.streak++;
+    st.last = 'ok';
+  } else {
+    ng++;
+    st.th = Math.max(0, st.th - K * p);
+    st.streak = 0;
+    st.last = 'ng';
+    wrongs.push(q);
+  }
+  st.n++; st.ok += correct ? 1 : 0; st.ng += correct ? 0 : 1;
+  if(!st.first) st.first = new Date().toISOString().slice(0,10);
+  save();
+  const c = BYID[q.cid];
+  const fb = $('fb');
+  fb.innerHTML = `<div class="fb ${correct?'ok':'no'}">
+      <div class="t">${correct ? '맞았어' : '여기서 살짝 헷갈렸지'}</div>
+      <div>${q.explain}</div>
+      <div style="margin-top:11px; padding-top:10px; border-top:1px dashed #cbd5e1; font-size:13px; color:#3d4f63">
+        <b>${c.title}</b> — ${c.card.key}</div>
+      ${correct ? '' : `<div style="margin-top:12px; padding-top:11px; border-top:1px dashed #cbd5e1">
+        <div style="font-size:12px; font-weight:800; color:#8a5200; margin-bottom:7px">한 칸만 다시 짚고 갈게</div>
+        <div style="font-size:13px; margin-bottom:5px"><b>이미 아는 것</b> · ${c.known}</div>
+        <div style="font-size:13px; margin-bottom:5px"><b>새로 알 것</b> · ${c.fresh}</div>
+        <div style="font-size:13px"><b>한 줄 핵심</b> · <span style="color:#1d4ed8; font-weight:800">${c.card.key}</span></div>
+      </div>`}
+    </div>
+    <button class="btn" onclick="next()">${idx+1 >= Q.length ? '결과 보기' : '다음 문항'}</button>`;
+  fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function next(){
+  idx++;
+  if(idx >= Q.length) finish(false);
+  else renderQ();
+}
+function finish(early){
+  const n = ok + ng;
+  if(n > 0){
+    const d = new Date();
+    S.sess.push({d:d.toISOString().slice(0,10), mode:isDiag?'진단':'학습', n:n, ok:ok,
+                 confused:wrongs.slice(0,3).map(q => q.cid)});
+    if(isDiag) S.diag = true;
+    S.sess = S.sess.slice(-60);
+    save();
+  }
+  const pct = n ? Math.round(ok/n*100) : 0;
+  /* 오늘의 살짝 헷갈린 것 3개 */
+  const conf = [];
+  wrongs.forEach(q => { if(!conf.find(x => x.cid === q.cid)) conf.push(q); });
+  if(conf.length < 3){
+    ALLC.slice().filter(c => cs(c.id).n > 0).sort((a,b) => cs(a.id).th - cs(b.id).th)
+      .forEach(c => { if(conf.length < 3 && !conf.find(x => x.cid === c.id)) conf.push({cid:c.id, title:c.title, d:0}); });
+  }
+  const cards = conf.slice(0,3).map(q => {
+    const c = BYID[q.cid];
+    return `<div class="tcard"><div class="h">${c.title}</div>
+      <div class="k">${c.card.key}</div><div class="e">${c.card.easy}</div></div>`;
+  }).join('');
+  const tg = isDiag ? 0.85 : curDiff().target;
+  const zone = pct >= (tg-0.05)*100 && pct <= (tg+0.05)*100
+             ? `<span style="color:#059669">딱 좋은 구간이에요 (목표 ${Math.round(tg*100)}%)</span>`
+             : pct > (tg+0.05)*100
+             ? '<span style="color:#D97706">조금 쉬웠어요 — 난이도를 한 단계 올릴 만해요</span>'
+             : '<span style="color:#D97706">조금 어려웠어요 — 난이도를 한 단계 내리는 게 좋아요</span>';
+  const wrongList = wrongs.length
+    ? wrongs.map(q => `<tr><td>${q.title}</td><td>${q.choices[q.answer]}</td></tr>`).join('')
+    : '<tr><td colspan="2" class="muted">틀린 문항이 없어요</td></tr>';
+  $('sc-res').innerHTML = `
+    <div class="card bar">
+      <h2>${early ? '여기까지 기록' : (isDiag ? '진단 완료' : '오늘 학습 완료')}</h2>
+      <div style="display:flex; align-items:baseline; gap:10px">
+        <div style="font-size:44px; font-weight:900; color:#1E3A5F">${pct}%</div>
+        <div class="muted">${ok} / ${n} 문항</div>
+      </div>
+      <div style="margin-top:6px; font-size:13px; font-weight:700">${zone}</div>
+      <div class="pbar" style="margin-top:12px; position:relative"><i style="width:${pct}%"></i></div>
+      <div class="pmeta"><span>0%</span><span>목표 ${Math.round(tg)}%</span><span>100%</span></div>
+    </div>
+    <div class="card">
+      <h2>자기 전 5분, 이 3개만</h2>
+      <p class="muted" style="font-size:13px; margin-bottom:10px">낮에 살짝 헷갈린 것에 뇌가 표시를 해 뒀어요. 자기 전에 다시 보면 잠자는 동안 굳어요.</p>
+      ${cards}
+    </div>
+    <div class="card">
+      <h2>이번에 틀린 문항</h2>
+      <table class="tbl"><tr><th>개념</th><th>정답</th></tr>${wrongList}</table>
+    </div>
+    <div class="btnrow">
+      <button class="btn" onclick="startMain()">한 번 더 (${SESS_N}문항)</button>
+      <button class="btn ghost" onclick="go('home')">홈으로</button>
+    </div>`;
+  show('res');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ── 개념 지도 ── */
+function stateOf(id){
+  const st = cs(id);
+  if(st.n === 0) return 0;
+  if(st.th < 0.40) return 1;
+  if(st.th < 0.60) return 2;
+  return 3;
+}
+function renderMap(){
+  refreshExtra();
+  let html = `<div class="card bar"><h2>개념 지도</h2>
+    <p class="muted">개념을 누르면 설명 카드를 볼 수 있어요. 색은 지금 내 위치예요.</p>
+    <div class="legend">
+      <span class="chip s0">새로 배우는 중</span>
+      <span class="chip s1">익히는 중</span>
+      <span class="chip s2">잘함</span>
+      <span class="chip s3">아주 잘함</span>
+    </div></div>`;
+  BANK.units.forEach(u => {
+    html += `<div class="unitbox"><div class="ut">${u.title}</div>`;
+    u.sections.forEach(s => {
+      html += `<div class="secbox"><div class="st">${s.title}</div><div class="chips">`;
+      s.concepts.forEach(c => {
+        const k = stateOf(c.id), st = cs(c.id);
+        const lab = st.n ? `${st.ok}/${st.n}` : '-';
+        const nExtra = EXTRA.filter(q => q.cid === c.id).length;
+        html += `<span class="chip s${k}" onclick="showCard('${c.id}')">${c.title} · ${lab}${nExtra?' +'+nExtra:''}</span>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  });
+  $('sc-map').innerHTML = html;
+}
+function showCard(id){
+  const c = BYID[id], st = cs(id);
+  const lvl = ['새로 배우는 중','익히는 중','잘함','아주 잘함'][stateOf(id)];
+  const qs = ALLQ.concat(EXTRA).filter(q => q.cid === id);
+  const extra = `<div class="card bar"><h2>${c.title}</h2>
+    <p class="muted" style="font-size:13px">현재 상태: <b>${lvl}</b> · 푼 문항 ${st.n}개 (정답 ${st.ok})</p>
+    <div class="step" style="margin-top:14px"><div class="no">1</div><div class="tx"><span class="lb">이미 아는 것</span>${c.known}</div></div>
+    <div class="step"><div class="no">2</div><div class="tx"><span class="lb">새로 알 것</span>${c.fresh}</div></div>
+    <div class="step new"><div class="no">3</div><div class="tx"><span class="lb">한 줄 핵심</span>${c.card.key}</div></div>
+    <div class="step"><div class="no">4</div><div class="tx"><span class="lb">쉽게 말하면</span>${c.card.easy}</div></div>
+    <div class="step"><div class="no">5</div><div class="tx"><span class="lb">왜 그럴까</span>${c.card.why}</div></div>
+    <div class="step"><div class="no">6</div><div class="tx"><span class="lb">예시</span>${c.card.example}</div></div>
+    <p class="muted" style="font-size:13px; margin-top:12px">문항 ${qs.length}개 · 이 개념에서 낼 수 있는 문제가 더 필요하면 AI에게 요청해 붙여 넣을 수 있어요 (리포트 탭).</p>
+  </div>
+  <button class="btn ghost" onclick="go('map')">지도로 돌아가기</button>`;
+  $('sc-map').innerHTML = extra;
+  show('map');
+}
+
+/* ── 리포트 ── */
+function renderReport(){
+  refreshExtra();
+  let totN = 0, totOk = 0;
+  ALLC.forEach(c => { const st = cs(c.id); totN += st.n; totOk += st.ok; });
+  const weak = ALLC.filter(c => cs(c.id).n > 0).sort((a,b) => cs(a.id).th - cs(b.id).th).slice(0,8);
+  const weakRows = weak.length ? weak.map(c => {
+    const st = cs(c.id);
+    return `<tr><td>${c.title}</td><td>${['','Ⅰ','Ⅱ'][BANK.units.findIndex(u=>u.id===c.unit)+1]||c.unit}</td>
+      <td>${st.ok}/${st.n}</td><td>${['새로 배우는 중','익히는 중','잘함','아주 잘함'][stateOf(c.id)]}</td></tr>`;
+  }).join('') : '<tr><td colspan="4" class="muted">아직 기록이 없어요</td></tr>';
+  const sess = S.sess.slice(-8).reverse().map(s =>
+    `<tr><td>${s.d}</td><td>${s.mode}</td><td>${s.ok}/${s.n}</td><td>${Math.round(s.ok/s.n*100)}%</td></tr>`).join('');
+  $('rep-body').innerHTML = `
+    <p class="muted" style="font-size:13px">진단 ${S.diag?'완료':'미완료'} · 전체 ${totN}문항 중 ${totOk}문항 정답
+      (${totN?Math.round(totOk/totN*100):0}%) · 학습 세션 ${S.sess.length}회</p>
+    <h3>도움이 필요한 개념</h3>
+    <table class="tbl"><tr><th>개념</th><th>단원</th><th>정답</th><th>상태</th></tr>${weakRows}</table>
+    <h3>최근 세션</h3>
+    <table class="tbl"><tr><th>날짜</th><th>종류</th><th>정답</th><th>정답률</th></tr>
+      ${sess || '<tr><td colspan="4" class="muted">아직 기록이 없어요</td></tr>'}</table>`;
+}
+function aiPrompt(){
+  const weak = ALLC.filter(c => cs(c.id).n > 0).sort((a,b) => cs(a.id).th - cs(b.id).th).slice(0,5);
+  const ids = ALLC.map(c => c.id).join(', ');
+  const weakList = weak.map(c => c.id + '(' + c.title + ')').join(', ') || '없음';
+  const head = (BANK.meta && BANK.meta.prompt) || '학습 문항을 새로 만들어 주세요.';
+  return `${head}
+
+아래 JSON 배열 형식으로만 답해 주세요. 설명이나 인사말은 쓰지 마세요.
+[
+  {"cid":"${ALLC[0] ? ALLC[0].id : 'C-1'}","stem":"문제 지문","choices":["보기1","보기2","보기3","보기4"],"answer":0,"explain":"왜 그런지 학생 눈높이 해설","d":0.5,"kind":"적용"}
+]
+
+규칙
+- cid는 아래 개념 id 중 하나만 사용: ${ids}
+- choices는 반드시 4개, answer는 정답 번호(0~3)
+- d는 난이도 0.2(쉬움) ~ 0.9(어려움), kind는 기억/적용/추론 중 하나
+- 이미 아는 맥락 80~90%에 새 개념 10~20%를 얹는 방식으로 설명을 구성
+- 사실과 수치는 교육과정 수준에서 정확하게, 학생 생활과 연결된 사례 사용
+
+우선 보강할 개념(정답률이 낮은 순): ${weakList}
+
+개념 id 전체 목록: ${ids}`;
+}
+function copyPrompt(){ copy(aiPrompt(), '요청문을 복사했어요. AI 채팅에 붙여 넣으세요.'); }
+function copyState(){ copy(JSON.stringify(S), '기록을 복사했어요. 따로 보관해 두세요.'); }
+function copy(txt, msg){
+  const ta = document.createElement('textarea');
+  ta.value = txt; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast(msg); }catch(e){ toast('복사에 실패했어요'); }
+  document.body.removeChild(ta);
+}
+function mergePaste(){
+  const box = $('pasteBox'), msg = $('paste-msg');
+  let arr;
+  try{ arr = JSON.parse(box.value); }catch(e){ msg.textContent = 'JSON 형식이 아니에요. 대괄호와 따옴표를 확인해 주세요.'; return; }
+  if(!Array.isArray(arr)){ msg.textContent = '배열 형태여야 해요. [ ] 로 감싸 주세요.'; return; }
+  let added = 0, bad = [];
+  arr.forEach(o => {
+    if(!o || !o.cid || !BYID[o.cid]){ bad.push(o && o.cid); return; }
+    if(!o.stem || !Array.isArray(o.choices) || o.choices.length !== 4) { bad.push(o.cid); return; }
+    if(typeof o.answer !== 'number' || o.answer < 0 || o.answer > 3){ bad.push(o.cid); return; }
+    S.extra.push({cid:o.cid, stem:o.stem, choices:o.choices, answer:o.answer,
+                  explain:o.explain || '', d:(typeof o.d === 'number' ? Math.max(0,Math.min(1,o.d)) : 0.5),
+                  kind:o.kind || '적용', _i:S.extra.length});
+    added++;
+  });
+  save(); refreshExtra();
+  msg.textContent = added + '문항을 추가했어요.' + (bad.length ? ' 형식이 맞지 않아 건너뛴 항목: ' + bad.length + '개' : '');
+  if(added) box.value = '';
+}
+function loadState(){
+  const raw = prompt('내보낸 기록(JSON)을 붙여 넣고 확인을 누르세요.');
+  if(!raw) return;
+  try{
+    const p = JSON.parse(raw);
+    if(!p || !p.c){ toast('기록 형식이 아니에요'); return; }
+    S = p; save(); refreshExtra(); renderReport(); toast('기록을 불러왔어요');
+  }catch(e){ toast('기록 형식이 아니에요'); }
+}
+function resetAll(){
+  if(!confirm('이 학습자의 학습 기록을 지울까요? 되돌릴 수 없어요.')) return;
+  S = blank(); save(true);
+  refreshExtra(); renderReport(); renderHome(); renderProfBar(); toast('기록을 지웠어요');
+}
+
+/* 키보드: 1~4 답 선택, Enter 다음 */
+document.addEventListener('keydown', e => {
+  if($('sc-quiz').classList.contains('hidden')) return;
+  if('1234'.indexOf(e.key) >= 0){
+    const b = document.querySelectorAll('.ch')[+e.key - 1];
+    if(b && !b.disabled) b.click();
+  } else if(e.key === 'Enter'){
+    const btns = document.querySelectorAll('#fb .btn');
+    if(btns.length) btns[0].click();
+  }
+});
+
+/* ── 코스 메타 반영 ── */
+(function(){
+  const m = BANK.meta || {};
+  if(m.title) document.title = m.title;
+  const subEl = document.querySelector('.head .sub'); if(subEl && m.sub) subEl.textContent = m.sub;
+  const srcEl = $('src-line'); if(srcEl && m.source) srcEl.textContent = m.source;
+})();
+
+/* ── 시작 ── */
+IDX = loadIndex();
+S = load();
+refreshExtra();
+renderProfBar();
+renderDiffBar();
+renderHome();
+syncPull();
+if(storeBroken){
+  setTimeout(() => toast('저장 공간을 쓸 수 없어 기록이 유지되지 않아요'), 700);
+}
+
+</script>
+</body>
+</html>

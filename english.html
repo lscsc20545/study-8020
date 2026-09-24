@@ -350,15 +350,32 @@ function loadHub(){
 }
 function saveHub(h){ try{ localStorage.setItem(HUBKEY, JSON.stringify(h)); }catch(e){} }
 function urlKid(){ const m = location.search.match(/[?&]kid=([^&]+)/); return m ? decodeURIComponent(m[1]) : null; }
+/* 학습자는 과목을 여러 개 가질 수 있다(hub v2). v1(과목 1개)은 읽을 때 승계한다. */
+const COURSE = (BANK.meta && BANK.meta.course) || '';
+function kidHas(k, cid){ return Array.isArray(k.courses) ? k.courses.includes(cid) : k.course === cid; }
+function kidDiff(k, cid){
+  if(k.diff && typeof k.diff === 'object') return (k.diff[cid] | 0) || 0;
+  return (k.diff | 0) || 0;
+}
 function portalKid(){
   const h = loadHub(); if(!h || !Array.isArray(h.kids) || !h.kids.length) return null;
   const want = urlKid();
-  return h.kids.find(k => k.id === want) || h.kids.find(k => k.course === (BANK.meta && BANK.meta.course)) || null;
+  return h.kids.find(k => k.id === want) || h.kids.find(k => kidHas(k, COURSE)) || null;
 }
-function hubWrite(pid, patch){
+function hubSaveDiff(pid, idx){
   const h = loadHub(); if(!h) return;
   const k = h.kids.find(x => x.id === pid); if(!k) return;
-  Object.assign(k, patch); saveHub(h);
+  if(!Array.isArray(k.courses)){                     /* v1 → v2 승계 */
+    const c0 = k.course || COURSE;
+    k.diff = {}; k.diff[c0] = (k.diff | 0) || 0;
+    k.courses = [c0];
+  }
+  if(!k.diff || typeof k.diff !== 'object') k.diff = {};
+  if(k.courses.indexOf(COURSE) < 0) k.courses.push(COURSE);   /* 이 코스를 처음 열면 자동 등록 */
+  k.diff[COURSE] = idx | 0;
+  k.course = undefined;
+  h.v = 2;
+  saveHub(h);
 }
 
 function blank(){
@@ -369,7 +386,7 @@ function blank(){
 function loadIndex(){
   if(PORTAL){
     const k = portalKid();
-    if(k) return {profiles:[{id:k.id, name:k.name, diff:(k.diff|0)||0}], current:k.id, portal:true};
+    if(k) return {profiles:[{id:k.id, name:k.name, diff:kidDiff(k, COURSE)}], current:k.id, portal:true};
   }
   let idx = null;
   try{ const raw = localStorage.getItem(IDXKEY); if(raw) idx = JSON.parse(raw); }catch(e){}
@@ -382,7 +399,7 @@ function loadIndex(){
 function saveIndex(){
   try{ localStorage.setItem(IDXKEY, JSON.stringify(IDX)); }catch(e){}
   if(PORTAL){
-    try{ const p = curProf(); if(p) hubWrite(p.id, {diff:(p.diff|0)||0}); }catch(e){}
+    try{ const p = curProf(); if(p) hubSaveDiff(p.id, (p.diff | 0) || 0); }catch(e){}
   }
 }
 function curPid(){

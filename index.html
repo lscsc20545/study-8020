@@ -74,6 +74,14 @@
   /* 좁은 화면에서 표가 눌리지 않게 가로 스와이프 허용(부모 팁이 길어질 수 있음) */
   .tblwrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
   .tblwrap table{ min-width:520px; }
+  .kid .clist{ margin-top:6px; }
+  .kid .crow{ padding:9px 0; border-top:1px dashed #e3e9f2; }
+  .kid .crow:first-child{ border-top:0; padding-top:2px; }
+  .cblock{ margin-top:14px; padding-top:12px; border-top:1px solid #eef1f6; }
+  .cblock h3{ margin-top:0; }
+  .setrow{ padding:12px 0; border-top:1px solid #eef1f6; }
+  .setrow:first-of-type{ border-top:0; padding-top:0; }
+  .inp.slim{ display:inline-block; width:auto; min-width:120px; margin-right:6px; }
 
   ul.guide{ list-style:none; }
   ul.guide li{ font-size:13px; color:var(--sub); padding-left:14px; position:relative; margin-bottom:6px; }
@@ -125,8 +133,8 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CAT = {"social":{"id":"social","name":"중1 사회 Ⅰ·Ⅱ","label":"중1 사회","page":"social.html","store":"sr8020","nConcept":26,"nQuestion":156,"guide":["주 3회, 한 번에 15문항이 기본입니다. 길게 한 번보다 짧게 여러 번이 효과적입니다.","세션 끝에 나오는 '자기 전 5분 카드' 3개를 같이 훑어주세요. 하루의 오차가 잠자는 동안 굳습니다.","지도·뉴스·여행 사진처럼 실제 자료를 함께 보면 개념이 오래 남습니다.","정답률이 85% 언저리일 때가 가장 빨리 배우는 구간입니다. 100%면 너무 쉽고, 60% 아래면 너무 어렵습니다."],"units":[{"name":"Ⅰ. 세계화 시대, 지리의 힘","secs":[{"name":"01. 우리가 살아가는 모자이크 세계","concepts":[{"id":"I-01-1","title":"위치를 읽는 두 가지 눈","tier":1,"tip":"집에서 학교까지 걸어가는 길을 지도 위에 그어 보세요"},{"id":"I-01-2","title":"자연환경과 인문환경","tier":1,"tip":"등굣길에서 본 산·논과 도로·아파트를 나눠 말해 보게 하세요"},{"id":"I-01-3","title":"세계의 자연환경 - 위도가 기후를 가른다","tier":2,"tip":"세계 날씨 앱에서 아산과 싱가포르 기온을 함께 비교해 보세요"},{"id":"I-01-4","title":"모자이크로서의 세계 - 지역 특성 추론하기","tier":2,"tip":"여행 사진 한 장을 위치·날씨·옷차림 순서로 설명해 보게 하세요"}]},{"name":"02. 네트워크로 연결된 세계","concepts":[{"id":"I-02-1","title":"교통의 발달이 거리를 좁힌다","tier":2,"tip":"어제 주문한 택배가 온 시간과 경로를 함께 확인해 보세요"},{"id":"I-02-2","title":"통신의 발달이 만든 네트워크","tier":2,"tip":"해외 유튜브 영상이 어느 나라 서버를 거치는지 알아보세요"},{"id":"I-02-3","title":"스케일을 바꿔 세상 보기","tier":3,"tip":"같은 미세먼지 뉴스를 동네·나라·세계 크기로 나눠 말해 보세요"},{"id":"I-02-4","title":"일상생활과 세계의 연결","tier":2,"tip":"운동화와 옷 라벨의 생산국을 함께 읽고 짚어 주세요"}]},{"name":"03. 서로 영향을 주고받는 역동적인 세계","concepts":[{"id":"I-03-1","title":"세계화와 등질화","tier":2,"tip":"해외 여행 사진에서 익숙한 브랜드 간판을 함께 세어 보세요"},{"id":"I-03-2","title":"지역화 - 세계화 속의 지역","tier":3,"tip":"동네 빵집처럼 우리 동네에만 있는 것을 함께 꼽아 보세요"},{"id":"I-03-3","title":"글로컬 - 지역이 세계를 바꾼다","tier":3,"tip":"한국 음식·가수가 외국에서 인기인 영상을 함께 봐 주세요"},{"id":"I-03-4","title":"세계화 시대에 필요한 지리적 안목","tier":3,"tip":"가족 여행 계획을 세우며 갈 곳을 종이에 그려 보게 하세요"}]}]},{"name":"Ⅱ. 아시아","secs":[{"name":"01. 아시아의 여러 국가와 자연환경","concepts":[{"id":"II-01-1","title":"아시아의 범위와 다섯 지역","tier":1,"tip":"알고 있는 아시아 나라를 다섯 지역으로 함께 분류해 보세요"},{"id":"II-01-2","title":"아시아의 여러 국가와 주요 도시","tier":1,"tip":"뉴스에 나온 나라의 수도를 함께 검색해 짝지어 보세요"},{"id":"II-01-3","title":"아시아의 지형 - 가장 높고 가장 낮은 대륙","tier":2,"tip":"에베레스트와 사해 높이를 검색해 높낮이를 비교해 보세요"},{"id":"II-01-4","title":"아시아의 기후 - 계절풍이 만든 생활","tier":2,"tip":"장마철 비 오는 날 창밖 바람 방향을 함께 살펴보세요"}]},{"name":"02. 아시아의 종교와 문화 다양성","concepts":[{"id":"II-02-1","title":"아시아의 네 종교 분포","tier":2,"tip":"가 본 절·성당·모스크 사진을 종교별로 함께 나눠 보세요"},{"id":"II-02-2","title":"종교가 만든 문화경관과 생활양식","tier":2,"tip":"해외 음식 주문 때 할랄 표시를 함께 읽어 보세요"},{"id":"II-02-3","title":"문화 다양성을 대하는 자세","tier":3,"tip":"다른 문화 친구 이야기가 나오면 틀린 게 아님을 짚어 주세요"}]},{"name":"03. 아시아의 인구 특징과 성장 잠재력","concepts":[{"id":"II-03-1","title":"아시아의 인구 규모와 분포","tier":2,"tip":"세계 인구 순위를 검색해 인도가 1위임을 함께 짚어 보세요"},{"id":"II-03-2","title":"지역별 인구 구조의 차이","tier":2,"tip":"폐교 뉴스와 인도 새 학교 뉴스를 함께 찾아 비교해 보세요"},{"id":"II-03-3","title":"성장 잠재력과 인구 보너스","tier":3,"tip":"가족 중 일하는 사람과 부양할 사람 수를 함께 세어 보세요"},{"id":"II-03-4","title":"이주가 만드는 인구 변화","tier":3,"tip":"동네 외국인 이웃이 온 나라를 함께 물어보고 검색해 보세요"}]},{"name":"04. 아시아의 산업 특징과 변화","concepts":[{"id":"II-04-1","title":"아시아 산업의 세 가지 얼굴","tier":2,"tip":"집 안 물건을 자원·조립·첨단 산업으로 함께 나눠 보세요"},{"id":"II-04-2","title":"산업 구조의 변화","tier":3,"tip":"조부모께 옛날 우리 동네 공장 이야기를 함께 들려달라 하세요"},{"id":"II-04-3","title":"아시아와 우리나라 산업의 영향","tier":3,"tip":"한국 제품이 아시아에서 인기라는 기사를 함께 찾아 읽어 보세요"}]}]}]},"english":{"id":"english","name":"초4 영어 (문법·단어·회화)","label":"초4 영어","page":"english.html","store":"s8020eng","nConcept":30,"nQuestion":180,"guide":["문법·단어·회화를 번갈아 하면 하루 15문항이 5분 안에 끝납니다.","영어는 소리 내어 읽는 것이 핵심입니다. 아이가 답을 소리 내어 말하게 해주세요.","단어는 하루 5개 정도, 문장 속에서 익히게 해주세요. 낱말만 외우면 금방 잊습니다.","틀린 문항은 해설을 부모가 읽어주지 말고 아이가 소리 내어 읽게 해주세요."],"units":[{"name":"초4 영어","secs":[{"name":"문법","concepts":[{"id":"E-G1","title":"be동사 am / are / is","tier":1,"tip":"가족 사진을 보며 'I am ~, You are ~, She is ~'로 말해보게 하세요."},{"id":"E-G2","title":"be동사 부정문과 의문문","tier":2,"tip":"'Are you hungry?'처럼 하루 한 번 be동사 질문을 던지고 Yes/No로 답하게 하세요."},{"id":"E-G3","title":"일반동사 현재형","tier":2,"tip":"'I play / I like / I eat' 세 문장을 하루 하나씩 생활 속에서 만들어 보게 하세요."},{"id":"E-G4","title":"3인칭 단수 -s 붙이기","tier":3,"tip":"언니나 친구 이야기를 할 때 'She likes ~'로 말하는 연습을 시켜주세요."},{"id":"E-G5","title":"명사의 복수형","tier":2,"tip":"장보기 놀이로 'two apples, three boxes'처럼 소리 내어 세어보게 하세요."},{"id":"E-G6","title":"대명사와 소유격","tier":2,"tip":"아이 물건을 가리키며 'Is this your bag?'으로 물어보세요."},{"id":"E-G7","title":"this / that / these / those","tier":3,"tip":"교실이나 방에서 물건을 가리키며 'What's this?' 'What are these?'를 번갈아 물어보세요."},{"id":"E-G8","title":"의문사로 묻기","tier":3,"tip":"저녁에 'What time is it?', 'Where is the book?'을 아이가 묻게 역할을 바꿔보세요."},{"id":"E-G9","title":"can으로 할 수 있는 것 말하기","tier":2,"tip":"아이가 잘하는 것(수영, 그림, 줄넘기)을 'I can ~'으로 말하게 하고 부모는 'Can you ~?'로 되물어 주세요."},{"id":"E-G10","title":"장소·시간 전치사","tier":3,"tip":"물건을 숨겨두고 'Where is it? It's under the desk.' 놀이를 해보세요."}]},{"name":"단어","concepts":[{"id":"E-W1","title":"인사와 예절 낱말","tier":1,"tip":"아침에 만나면 'Good morning'으로 먼저 인사해 주세요. 시간대 구분이 자연스럽게 몸에 붙습니다."},{"id":"E-W2","title":"숫자와 나이","tier":1,"tip":"계단이나 신발장 칸을 오르내리며 11~20을 소리 내어 세게 하세요."},{"id":"E-W3","title":"색깔과 모양","tier":1,"tip":"옷장이나 과일을 보며 색깔과 모양을 영어로 말하게 하세요."},{"id":"E-W4","title":"가족과 사람","tier":1,"tip":"가족사진을 보며 'This is my sister.'로 한 명씩 소개하게 하세요."},{"id":"E-W5","title":"학교와 학용품","tier":1,"tip":"가방을 정리할 때 'Put your ruler in the pencil case.'처럼 영어로 부탁해 보세요."},{"id":"E-W6","title":"음식과 과일","tier":2,"tip":"식탁에서 'Do you want some water?'처럼 묻고 Yes, please. / No, thanks.로 답하게 하세요."},{"id":"E-W7","title":"동물","tier":1,"tip":"동물원 사진이나 그림책을 보며 좋아하는 동물을 'I like ~'로 말하게 하세요."},{"id":"E-W8","title":"날씨와 계절","tier":2,"tip":"아침에 창밖을 보며 'How's the weather today?'를 아이가 답하게 하세요."},{"id":"E-W9","title":"요일과 때","tier":2,"tip":"달력에 영어 요일을 함께 적고 오늘 요일을 영어로 말하게 하세요."},{"id":"E-W10","title":"취미와 동작 낱말","tier":2,"tip":"주말에 한 일을 'I played ~'가 아니라 'I play ~'로 지금 하는 습관처럼 말하게 하세요."}]},{"name":"회화","concepts":[{"id":"E-C1","title":"인사하고 안부 묻기","tier":1,"tip":"등교 전에 아이가 먼저 'How are you?'를 말하게 하고 부모가 답하는 역할로 바꿔보세요."},{"id":"E-C2","title":"자기소개하기","tier":1,"tip":"처음 만난 사람 앞에서 2문장 자기소개를 연습시켜 주세요."},{"id":"E-C3","title":"이름과 기분 묻기","tier":2,"tip":"하교 후 'How do you feel today?'를 영어로 물어보세요."},{"id":"E-C4","title":"물건 묻고 답하기","tier":2,"tip":"장보기나 정리 중에 물건을 가리키며 아이가 답하게 해보세요."},{"id":"E-C5","title":"좋아하는 것 묻기","tier":2,"tip":"저녁 메뉴를 고를 때 'Do you like ~?'로 아이가 답하게 하세요."},{"id":"E-C6","title":"시간 묻고 답하기","tier":3,"tip":"등교·취침 시간에 시계를 보며 아이가 답하게 하세요."},{"id":"E-C7","title":"날씨 묻고 답하기","tier":2,"tip":"아침마다 창밖을 보며 두 문장 대화를 완성하게 하세요."},{"id":"E-C8","title":"위치 묻고 답하기","tier":3,"tip":"동네를 걸으며 아이가 아는 건물을 영어로 물어보세요."},{"id":"E-C9","title":"제안하고 답하기","tier":3,"tip":"주말 계획을 세울 때 아이가 'Let's ~'로 먼저 제안하게 해보세요."},{"id":"E-C10","title":"감사하고 사과하기","tier":2,"tip":"집에서도 아이가 도와줬을 때 Thank you.로 답하고 You're welcome.을 말하게 하세요."}]}]}]}};
-const META = {"title":"80-20 학습 포탈","sub":"아이는 15문항씩 학습, 부모는 진척과 준비사항 확인","version":"hub-v1"};
+const CAT = {"social":{"id":"social","name":"중1 사회 Ⅰ·Ⅱ","label":"중1 사회","page":"social.html","store":"sr8020","nConcept":26,"nQuestion":156,"guide":["주 3회, 한 번에 15문항이 기본입니다. 길게 한 번보다 짧게 여러 번이 효과적입니다.","세션 끝에 나오는 '자기 전 5분 카드' 3개를 같이 훑어주세요. 하루의 오차가 잠자는 동안 굳습니다.","지도·뉴스·여행 사진처럼 실제 자료를 함께 보면 개념이 오래 남습니다.","정답률이 85% 언저리일 때가 가장 빨리 배우는 구간입니다. 100%면 너무 쉽고, 60% 아래면 너무 어렵습니다."],"units":[{"name":"Ⅰ. 세계화 시대, 지리의 힘","secs":[{"name":"01. 우리가 살아가는 모자이크 세계","concepts":[{"id":"I-01-1","title":"위치를 읽는 두 가지 눈","tier":1,"tip":"집에서 학교까지 걸어가는 길을 지도 위에 그어 보세요"},{"id":"I-01-2","title":"자연환경과 인문환경","tier":1,"tip":"등굣길에서 본 산·논과 도로·아파트를 나눠 말해 보게 하세요"},{"id":"I-01-3","title":"세계의 자연환경 - 위도가 기후를 가른다","tier":2,"tip":"세계 날씨 앱에서 아산과 싱가포르 기온을 함께 비교해 보세요"},{"id":"I-01-4","title":"모자이크로서의 세계 - 지역 특성 추론하기","tier":2,"tip":"여행 사진 한 장을 위치·날씨·옷차림 순서로 설명해 보게 하세요"}]},{"name":"02. 네트워크로 연결된 세계","concepts":[{"id":"I-02-1","title":"교통의 발달이 거리를 좁힌다","tier":2,"tip":"어제 주문한 택배가 온 시간과 경로를 함께 확인해 보세요"},{"id":"I-02-2","title":"통신의 발달이 만든 네트워크","tier":2,"tip":"해외 유튜브 영상이 어느 나라 서버를 거치는지 알아보세요"},{"id":"I-02-3","title":"스케일을 바꿔 세상 보기","tier":3,"tip":"같은 미세먼지 뉴스를 동네·나라·세계 크기로 나눠 말해 보세요"},{"id":"I-02-4","title":"일상생활과 세계의 연결","tier":2,"tip":"운동화와 옷 라벨의 생산국을 함께 읽고 짚어 주세요"}]},{"name":"03. 서로 영향을 주고받는 역동적인 세계","concepts":[{"id":"I-03-1","title":"세계화와 등질화","tier":2,"tip":"해외 여행 사진에서 익숙한 브랜드 간판을 함께 세어 보세요"},{"id":"I-03-2","title":"지역화 - 세계화 속의 지역","tier":3,"tip":"동네 빵집처럼 우리 동네에만 있는 것을 함께 꼽아 보세요"},{"id":"I-03-3","title":"글로컬 - 지역이 세계를 바꾼다","tier":3,"tip":"한국 음식·가수가 외국에서 인기인 영상을 함께 봐 주세요"},{"id":"I-03-4","title":"세계화 시대에 필요한 지리적 안목","tier":3,"tip":"가족 여행 계획을 세우며 갈 곳을 종이에 그려 보게 하세요"}]}]},{"name":"Ⅱ. 아시아","secs":[{"name":"01. 아시아의 여러 국가와 자연환경","concepts":[{"id":"II-01-1","title":"아시아의 범위와 다섯 지역","tier":1,"tip":"알고 있는 아시아 나라를 다섯 지역으로 함께 분류해 보세요"},{"id":"II-01-2","title":"아시아의 여러 국가와 주요 도시","tier":1,"tip":"뉴스에 나온 나라의 수도를 함께 검색해 짝지어 보세요"},{"id":"II-01-3","title":"아시아의 지형 - 가장 높고 가장 낮은 대륙","tier":2,"tip":"에베레스트와 사해 높이를 검색해 높낮이를 비교해 보세요"},{"id":"II-01-4","title":"아시아의 기후 - 계절풍이 만든 생활","tier":2,"tip":"장마철 비 오는 날 창밖 바람 방향을 함께 살펴보세요"}]},{"name":"02. 아시아의 종교와 문화 다양성","concepts":[{"id":"II-02-1","title":"아시아의 네 종교 분포","tier":2,"tip":"가 본 절·성당·모스크 사진을 종교별로 함께 나눠 보세요"},{"id":"II-02-2","title":"종교가 만든 문화경관과 생활양식","tier":2,"tip":"해외 음식 주문 때 할랄 표시를 함께 읽어 보세요"},{"id":"II-02-3","title":"문화 다양성을 대하는 자세","tier":3,"tip":"다른 문화 친구 이야기가 나오면 틀린 게 아님을 짚어 주세요"}]},{"name":"03. 아시아의 인구 특징과 성장 잠재력","concepts":[{"id":"II-03-1","title":"아시아의 인구 규모와 분포","tier":2,"tip":"세계 인구 순위를 검색해 인도가 1위임을 함께 짚어 보세요"},{"id":"II-03-2","title":"지역별 인구 구조의 차이","tier":2,"tip":"폐교 뉴스와 인도 새 학교 뉴스를 함께 찾아 비교해 보세요"},{"id":"II-03-3","title":"성장 잠재력과 인구 보너스","tier":3,"tip":"가족 중 일하는 사람과 부양할 사람 수를 함께 세어 보세요"},{"id":"II-03-4","title":"이주가 만드는 인구 변화","tier":3,"tip":"동네 외국인 이웃이 온 나라를 함께 물어보고 검색해 보세요"}]},{"name":"04. 아시아의 산업 특징과 변화","concepts":[{"id":"II-04-1","title":"아시아 산업의 세 가지 얼굴","tier":2,"tip":"집 안 물건을 자원·조립·첨단 산업으로 함께 나눠 보세요"},{"id":"II-04-2","title":"산업 구조의 변화","tier":3,"tip":"조부모께 옛날 우리 동네 공장 이야기를 함께 들려달라 하세요"},{"id":"II-04-3","title":"아시아와 우리나라 산업의 영향","tier":3,"tip":"한국 제품이 아시아에서 인기라는 기사를 함께 찾아 읽어 보세요"}]}]}]},"english":{"id":"english","name":"초4 영어 (문법·단어·회화)","label":"초4 영어","page":"english.html","store":"s8020eng","nConcept":30,"nQuestion":180,"guide":["문법·단어·회화를 번갈아 하면 하루 15문항이 5분 안에 끝납니다.","영어는 소리 내어 읽는 것이 핵심입니다. 아이가 답을 소리 내어 말하게 해주세요.","단어는 하루 5개 정도, 문장 속에서 익히게 해주세요. 낱말만 외우면 금방 잊습니다.","틀린 문항은 해설을 부모가 읽어주지 말고 아이가 소리 내어 읽게 해주세요."],"units":[{"name":"초4 영어","secs":[{"name":"문법","concepts":[{"id":"E-G1","title":"be동사 am / are / is","tier":1,"tip":"가족 사진을 보며 'I am ~, You are ~, She is ~'로 말해보게 하세요."},{"id":"E-G2","title":"be동사 부정문과 의문문","tier":2,"tip":"'Are you hungry?'처럼 하루 한 번 be동사 질문을 던지고 Yes/No로 답하게 하세요."},{"id":"E-G3","title":"일반동사 현재형","tier":2,"tip":"'I play / I like / I eat' 세 문장을 하루 하나씩 생활 속에서 만들어 보게 하세요."},{"id":"E-G4","title":"3인칭 단수 -s 붙이기","tier":3,"tip":"언니나 친구 이야기를 할 때 'She likes ~'로 말하는 연습을 시켜주세요."},{"id":"E-G5","title":"명사의 복수형","tier":2,"tip":"장보기 놀이로 'two apples, three boxes'처럼 소리 내어 세어보게 하세요."},{"id":"E-G6","title":"대명사와 소유격","tier":2,"tip":"아이 물건을 가리키며 'Is this your bag?'으로 물어보세요."},{"id":"E-G7","title":"this / that / these / those","tier":3,"tip":"교실이나 방에서 물건을 가리키며 'What's this?' 'What are these?'를 번갈아 물어보세요."},{"id":"E-G8","title":"의문사로 묻기","tier":3,"tip":"저녁에 'What time is it?', 'Where is the book?'을 아이가 묻게 역할을 바꿔보세요."},{"id":"E-G9","title":"can으로 할 수 있는 것 말하기","tier":2,"tip":"아이가 잘하는 것(수영, 그림, 줄넘기)을 'I can ~'으로 말하게 하고 부모는 'Can you ~?'로 되물어 주세요."},{"id":"E-G10","title":"장소·시간 전치사","tier":3,"tip":"물건을 숨겨두고 'Where is it? It's under the desk.' 놀이를 해보세요."}]},{"name":"단어","concepts":[{"id":"E-W1","title":"인사와 예절 낱말","tier":1,"tip":"아침에 만나면 'Good morning'으로 먼저 인사해 주세요. 시간대 구분이 자연스럽게 몸에 붙습니다."},{"id":"E-W2","title":"숫자와 나이","tier":1,"tip":"계단이나 신발장 칸을 오르내리며 11~20을 소리 내어 세게 하세요."},{"id":"E-W3","title":"색깔과 모양","tier":1,"tip":"옷장이나 과일을 보며 색깔과 모양을 영어로 말하게 하세요."},{"id":"E-W4","title":"가족과 사람","tier":1,"tip":"가족사진을 보며 'This is my sister.'로 한 명씩 소개하게 하세요."},{"id":"E-W5","title":"학교와 학용품","tier":1,"tip":"가방을 정리할 때 'Put your ruler in the pencil case.'처럼 영어로 부탁해 보세요."},{"id":"E-W6","title":"음식과 과일","tier":2,"tip":"식탁에서 'Do you want some water?'처럼 묻고 Yes, please. / No, thanks.로 답하게 하세요."},{"id":"E-W7","title":"동물","tier":1,"tip":"동물원 사진이나 그림책을 보며 좋아하는 동물을 'I like ~'로 말하게 하세요."},{"id":"E-W8","title":"날씨와 계절","tier":2,"tip":"아침에 창밖을 보며 'How's the weather today?'를 아이가 답하게 하세요."},{"id":"E-W9","title":"요일과 때","tier":2,"tip":"달력에 영어 요일을 함께 적고 오늘 요일을 영어로 말하게 하세요."},{"id":"E-W10","title":"취미와 동작 낱말","tier":2,"tip":"주말에 한 일을 'I played ~'가 아니라 'I play ~'로 지금 하는 습관처럼 말하게 하세요."}]},{"name":"회화","concepts":[{"id":"E-C1","title":"인사하고 안부 묻기","tier":1,"tip":"등교 전에 아이가 먼저 'How are you?'를 말하게 하고 부모가 답하는 역할로 바꿔보세요."},{"id":"E-C2","title":"자기소개하기","tier":1,"tip":"처음 만난 사람 앞에서 2문장 자기소개를 연습시켜 주세요."},{"id":"E-C3","title":"이름과 기분 묻기","tier":2,"tip":"하교 후 'How do you feel today?'를 영어로 물어보세요."},{"id":"E-C4","title":"물건 묻고 답하기","tier":2,"tip":"장보기나 정리 중에 물건을 가리키며 아이가 답하게 해보세요."},{"id":"E-C5","title":"좋아하는 것 묻기","tier":2,"tip":"저녁 메뉴를 고를 때 'Do you like ~?'로 아이가 답하게 하세요."},{"id":"E-C6","title":"시간 묻고 답하기","tier":3,"tip":"등교·취침 시간에 시계를 보며 아이가 답하게 하세요."},{"id":"E-C7","title":"날씨 묻고 답하기","tier":2,"tip":"아침마다 창밖을 보며 두 문장 대화를 완성하게 하세요."},{"id":"E-C8","title":"위치 묻고 답하기","tier":3,"tip":"동네를 걸으며 아이가 아는 건물을 영어로 물어보세요."},{"id":"E-C9","title":"제안하고 답하기","tier":3,"tip":"주말 계획을 세울 때 아이가 'Let's ~'로 먼저 제안하게 해보세요."},{"id":"E-C10","title":"감사하고 사과하기","tier":2,"tip":"집에서도 아이가 도와줬을 때 Thank you.로 답하고 You're welcome.을 말하게 하세요."}]}]}]},"science":{"id":"science","name":"중1 과학 (4·5·7단원)","label":"중1 과학","page":"science.html","store":"s8020sci","nConcept":33,"nQuestion":198,"guide":["과학은 눈으로 보는 과목입니다. 실험·관찰 사진을 함께 보면 개념이 오래 남습니다.","하루 15문항이면 5분입니다. 주 3회를 목표로 하되 시험 범위가 있으면 그 단원만 몰아서 하세요.","틀린 개념은 해설을 아이가 소리 내어 읽게 해주세요. 읽기만 해도 절반은 남습니다.","태양·달·별 내용은 밤에 직접 관찰해 보면 훨씬 잘 기억합니다."],"units":[{"name":"4. 물질의 상태 변화","secs":[{"name":"4-1. 확산과 증발","concepts":[{"id":"S4-1-1","title":"입자의 운동","tier":1,"tip":"설탕 한 스푼을 물에 넣고 젓지 않고 두었다가 보게 하세요."},{"id":"S4-1-2","title":"확산","tier":2,"tip":"찬물과 따뜻한 물에 색소를 각각 넣고 퍼지는 속도를 비교해 보세요."},{"id":"S4-1-3","title":"증발","tier":2,"tip":"같은 양의 물을 접시와 컵에 나눠 담아 어느 쪽이 먼저 마르는지 보세요."}]},{"name":"4-2. 물질의 상태 변화","concepts":[{"id":"S4-2-1","title":"세 가지 상태의 입자 배열","tier":1,"tip":"같은 물이 얼음·물·수증기로 변하는 모습을 함께 관찰해 보세요."},{"id":"S4-2-2","title":"여섯 가지 상태 변화","tier":1,"tip":"성에가 사라지거나 드라이아이스가 줄어드는 모습에서 승화를 찾아보세요."},{"id":"S4-2-3","title":"상태 변화와 입자 배열·부피","tier":2,"tip":"페트병에 물을 가득 채워 얼려 부피가 어떻게 되는지 보세요."},{"id":"S4-2-4","title":"상태 변화는 물리적 변화","tier":3,"tip":"초콜릿을 녹였다가 굳혀도 초콜릿인지 확인해 보세요."}]},{"name":"4-3. 상태 변화와 열에너지","concepts":[{"id":"S4-3-1","title":"열에너지의 흡수와 방출","tier":2,"tip":"더울 때 땀이 마르며 시원해지는 까닭을 함께 이야기해 보세요."},{"id":"S4-3-2","title":"온도-시간 그래프의 평평한 구간","tier":3,"tip":"얼음이 녹는 동안 온도계가 0도에 머무는 것을 함께 확인해 보세요."},{"id":"S4-3-3","title":"융해열과 기화열","tier":3,"tip":"'왜 끓는 물에 더 심하게 데일까'를 함께 따져보세요."},{"id":"S4-3-4","title":"상태 변화와 열에너지의 이용","tier":2,"tip":"냉장고 뒤쪽이 따뜻한 까닭을 함께 찾아보세요."}]}]},{"name":"5. 힘의 작용","secs":[{"name":"5-1. 힘의 표현과 합성","concepts":[{"id":"S5-1-1","title":"힘의 뜻과 단위","tier":1,"tip":"집에서 물건을 밀고 당기며 운동·모양이 변하는 경우를 찾아보세요."},{"id":"S5-1-2","title":"힘의 삼요소와 화살표 표현","tier":1,"tip":"문 손잡이와 경첩 쪽을 각각 밀어보며 느낌이 다른 까닭을 이야기해 보세요."},{"id":"S5-1-3","title":"힘의 합성과 합력","tier":3,"tip":"장바구니를 함께 밀 때와 서로 반대로 밀 때를 비교해 보세요."}]},{"name":"5-2. 여러 가지 힘","concepts":[{"id":"S5-2-1","title":"중력과 무게","tier":2,"tip":"달에서 몸무게가 지구의 1/6이 되는 까닭을 함께 이야기해 보세요."},{"id":"S5-2-2","title":"탄성력","tier":2,"tip":"고무줄을 여러 길이로 늘려 보고 되돌아가려는 힘을 느껴보게 하세요."},{"id":"S5-2-3","title":"마찰력","tier":2,"tip":"같은 상자를 매끄러운 바닥과 거친 바닥에서 각각 밀어보게 하세요."},{"id":"S5-2-4","title":"부력","tier":3,"tip":"목욕할 때 몸이 뜨는 느낌의 까닭을 함께 이야기해 보세요."}]},{"name":"5-3. 힘의 평형과 물체의 운동","concepts":[{"id":"S5-3-1","title":"알짜힘","tier":2,"tip":"가족이 함께 수레를 밀 때 방향이 같을 때와 다를 때를 비교해 보세요."},{"id":"S5-3-2","title":"두 힘의 평형 조건","tier":2,"tip":"물병을 손으로 들고 가만히 있을 때 작용하는 두 힘을 함께 생각해 보세요."},{"id":"S5-3-3","title":"알짜힘과 물체의 운동","tier":2,"tip":"책상 위 책과 굴러가는 공을 보며 두 경우를 구분해 보게 하세요."},{"id":"S5-3-4","title":"여러 가지 힘의 평형 사례","tier":3,"tip":"천장에 매달린 물건이나 책상 위 물건에 작용하는 힘을 함께 그려보세요."}]}]},{"name":"7. 태양계","secs":[{"name":"7-1. 태양계의 구성","concepts":[{"id":"S7-1-1","title":"태양계를 구성하는 천체","tier":1,"tip":"천체 관측 앱이나 사진으로 행성을 함께 찾아보세요."},{"id":"S7-1-2","title":"지구형 행성과 목성형 행성","tier":2,"tip":"태양계 그림에서 두 무리로 나눠 색칠해 보게 하세요."},{"id":"S7-1-3","title":"소행성·혜성·왜소행성","tier":2,"tip":"혜성 사진을 보며 꼬리가 어느 쪽을 향하는지 함께 살펴보세요."}]},{"name":"7-2. 태양의 특징과 활동","concepts":[{"id":"S7-2-1","title":"태양의 표면과 대기","tier":3,"tip":"태양 사진으로 함께 보되 절대 눈으로 직접 보지 않게 하세요."},{"id":"S7-2-2","title":"태양 활동이 지구에 미치는 영향","tier":3,"tip":"오로라 사진을 보며 지구에 미치는 영향을 함께 이야기해 보세요."}]},{"name":"7-3. 천체의 겉보기 운동과 별자리","concepts":[{"id":"S7-3-1","title":"지구 자전에 의한 겉보기 운동","tier":2,"tip":"밤에 같은 별을 10분 간격으로 두 번 관찰해 보게 하세요."},{"id":"S7-3-2","title":"북극성의 위치","tier":2,"tip":"북쪽 하늘에서 북극성을 함께 찾아보세요."},{"id":"S7-3-3","title":"지구 공전에 의한 별자리 변화","tier":3,"tip":"계절별 별자리 그림을 함께 찾아보세요."}]},{"name":"7-4. 달의 위상 변화와 일식·월식","concepts":[{"id":"S7-4-1","title":"달의 위상 변화","tier":2,"tip":"한 달 동안 같은 시각에 달 사진을 찍어보게 하세요."},{"id":"S7-4-2","title":"달의 위상이 변하는 까닭","tier":3,"tip":"손전등과 공으로 달의 위상을 함께 재현해 보세요."},{"id":"S7-4-3","title":"일식과 월식","tier":3,"tip":"개기월식 사진을 보며 천체의 순서를 함께 확인해 보세요."}]}]}]}};
+const META = {"title":"80-20 학습 포탈","sub":"아이는 15문항씩 학습, 부모는 진척과 준비사항 확인","version":"hub-v2"};
 const HUBKEY = 's8020_hub_v1';
 const OLD_IDX = 'sr8020_index_v1';
 const SEVEN = 7 * 86400000;
@@ -140,35 +148,63 @@ function toast(msg){
 
 /* ── 저장 ── */
 function loadHub(){
-  try{ const r = localStorage.getItem(HUBKEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
+  try{ const r = localStorage.getItem(HUBKEY); const h = r ? JSON.parse(r) : null; return h ? normHub(h) : null; }catch(e){ return null; }
 }
 function saveHub(h){ try{ localStorage.setItem(HUBKEY, JSON.stringify(h)); }catch(e){ toast('저장 공간을 쓸 수 없어요'); } }
 function newId(){ return 'k' + Date.now().toString(36) + Math.floor(Math.random() * 1000).toString(36); }
 
+/* 학습자는 과목을 여러 개 가진다(hub v2). v1(과목 1개)은 읽을 때 승계한다. */
+function normHub(h){
+  (h.kids || []).forEach(k => {
+    if(!Array.isArray(k.courses)){
+      const c0 = CAT[k.course] ? k.course : 'social';
+      const old = (typeof k.diff === 'number') ? k.diff : 0;
+      k.courses = [c0]; k.diff = {}; k.diff[c0] = old;
+    }
+    if(!k.diff || typeof k.diff !== 'object') k.diff = {};
+    k.courses = k.courses.filter(c => !!CAT[c]);
+    k.courses.forEach(c => { if(typeof k.diff[c] !== 'number') k.diff[c] = 0; });
+    k.course = undefined;
+  });
+  h.v = 2;
+  return h;
+}
+
 /* 첫 실행: 기존 사회 앱 프로필이 있으면 그대로 학습자로 이어받아 기록을 보존한다 */
 function ensureHub(){
   let h = loadHub();
-  if(h && Array.isArray(h.kids) && h.kids.length) return h;
-  const kids = [];
-  try{
-    const raw = localStorage.getItem(OLD_IDX);
-    if(raw){
-      const old = JSON.parse(raw);
-      (old.profiles || []).forEach(p => kids.push({id:p.id, name:p.name, course:'social', diff:(p.diff|0)||0}));
+  if(!(h && Array.isArray(h.kids) && h.kids.length)){
+    const kids = [];
+    try{
+      const raw = localStorage.getItem(OLD_IDX);
+      if(raw){
+        const old = JSON.parse(raw);
+        (old.profiles || []).forEach(p => kids.push({id:p.id, name:p.name, courses:['social'], diff:{social:(p.diff|0)||0}}));
+      }
+    }catch(e){}
+    kids.push({id:newId(), name:'초4 영어', courses:['english'], diff:{english:0}});
+    if(!kids.some(k => k.courses.indexOf('social') >= 0))
+      kids.unshift({id:newId(), name:'중1 사회', courses:['social', 'science'], diff:{social:0, science:0}});
+    h = {v:2, kids:kids, seen:false};
+    saveHub(h);
+    return h;
+  }
+  /* 새 코스(과학)가 생기면 사회를 학습하던 학습자 한 명에게 한 번만 붙여준다 */
+  if(!h.sciAttached){
+    if(!h.kids.some(k => k.courses.indexOf('science') >= 0)){
+      const soc = h.kids.filter(k => k.courses.indexOf('social') >= 0);
+      if(soc.length === 1){ soc[0].courses.push('science'); soc[0].diff.science = 0; }
     }
-  }catch(e){}
-  kids.push({id:newId(), name:'초4 영어', course:'english', diff:0});
-  if(!kids.some(k => k.course === 'social'))
-    kids.unshift({id:newId(), name:'중1 사회', course:'social', diff:0});
-  h = {v:1, kids:kids, seen:false};
-  saveHub(h);
+    h.sciAttached = true; saveHub(h);
+  }
   return h;
 }
-function courseOf(kid){ return CAT[kid.course] || null; }
+function courseOf(cid){ return CAT[cid] || null; }
+function diffOf(kid, cid){ return Math.max(0, Math.min(2, (kid.diff && kid.diff[cid]) | 0)); }
 
 /* ── 학습 기록 읽기 (코스 페이지가 쓴 키를 그대로 읽는다) ── */
-function stateOf(kid){
-  const c = courseOf(kid); if(!c) return null;
+function stateOf(kid, cid){
+  const c = courseOf(cid); if(!c) return null;
   try{ const r = localStorage.getItem(c.store + '_state_v1_' + kid.id); return r ? JSON.parse(r) : null; }catch(e){ return null; }
 }
 function flat(course){
@@ -181,8 +217,8 @@ function daysAgo(d){ return (Date.now() - new Date(d + 'T12:00:00').getTime()) /
 function rate(ok, n){ return n ? Math.round(ok / n * 100) : null; }
 const DIFFS = [{name:'안정', target:0.85}, {name:'도전', target:0.75}, {name:'가속', target:0.65}];
 
-function report(kid){
-  const course = courseOf(kid), all = flat(course), S = stateOf(kid);
+function report(kid, cid){
+  const course = courseOf(cid), all = flat(course), S = stateOf(kid, cid);
   const st = (S && S.c) ? S.c : {};
   const sess = (S && S.sess) ? S.sess : [];
   const learned = all.filter(c => st[c.id] && st[c.id].n > 0).length;
@@ -190,7 +226,7 @@ function report(kid){
   const cumOk = all.reduce((a, c) => a + ((st[c.id] && st[c.id].ok) || 0), 0);
   const wk = sess.filter(s => daysAgo(s.d) <= SEVEN);
   const wkN = wk.reduce((a, s) => a + s.n, 0), wkOk = wk.reduce((a, s) => a + s.ok, 0);
-  const diff = Math.max(0, Math.min(2, kid.diff | 0)), target = DIFFS[diff].target;
+  const diff = diffOf(kid, cid), target = DIFFS[diff].target;
 
   const weak = all.filter(c => st[c.id] && st[c.id].n >= 2 && st[c.id].ok / st[c.id].n <= 0.65)
     .map(c => ({...c, n:st[c.id].n, acc:rate(st[c.id].ok, st[c.id].n)}))
@@ -217,7 +253,7 @@ function report(kid){
       else stage = {k:'good', t:'딱 좋은 구간입니다. ' + Math.round(a*100) + '%로 목표 ' + Math.round(target*100) + '% 근처를 유지하고 있어요.'};
     }
   }
-  return {course:course, all:all, S:S, st:st, sess:sess, learned:learned, total:all.length,
+  return {course:course, cid:cid, all:all, S:S, st:st, sess:sess, learned:learned, total:all.length,
           cumN:cumN, cumOk:cumOk, cumAcc:rate(cumOk, cumN),
           wkSess:wk.length, wkN:wkN, wkAcc:rate(wkOk, wkN),
           diff:diff, diffName:DIFFS[diff].name, target:target,
@@ -225,23 +261,25 @@ function report(kid){
 }
 
 /* ── 화면: 오늘 학습 ── */
-function renderKids(){
-  const h = ensureHub();
-  const cards = h.kids.map(k => {
-    const c = courseOf(k);
-    if(!c) return '';
-    const r = report(k);
-    return `<div class="kid">
-      <div class="nm">${esc(k.name)}</div>
+function courseRow(k, cid){
+  const c = courseOf(cid); if(!c) return '';
+  const r = report(k, cid);
+  return `<div class="crow">
       <div class="co">${esc(c.name)} · 개념 ${r.learned}/${r.total} 학습</div>
       <div class="row">
         <span class="pill d">난이도 ${r.diffName}</span>
         <span class="pill">이번 주 ${r.wkSess}회</span>
         <span class="pill">${r.cumAcc == null ? '기록 없음' : '정답률 ' + r.cumAcc + '%'}</span>
       </div>
-      <button class="btn wide" onclick="start('${k.id}')">학습 시작</button>
+      <button class="btn wide" onclick="start('${k.id}','${cid}')">${esc(c.label)} 학습 시작</button>
     </div>`;
-  }).join('');
+}
+function renderKids(){
+  const h = ensureHub();
+  const cards = h.kids.map(k => `<div class="kid">
+      <div class="nm">${esc(k.name)}</div>
+      <div class="clist">${k.courses.map(cid => courseRow(k, cid)).join('') || '<div class="co">과목이 없습니다. 설정 탭에서 추가하세요.</div>'}</div>
+    </div>`).join('');
   $('sc-kids').innerHTML = `
     <div class="kids">${cards}</div>
     <div class="card" style="margin-top:14px">
@@ -264,27 +302,24 @@ function renderKids(){
       </ul>
     </div>`;
 }
-function start(kidId){
-  const h = ensureHub(), k = h.kids.find(x => x.id === kidId);
-  if(!k){ toast('학습자를 찾을 수 없어요'); return; }
-  const c = courseOf(k);
-  if(!c){ toast('코스 정보가 없어요'); return; }
+function start(kidId, cid){
+  const h = ensureHub(), k = h.kids.find(x => x.id === kidId), c = courseOf(cid);
+  if(!k || !c){ toast('코스 정보를 찾을 수 없어요'); return; }
   location.href = c.page + '?kid=' + encodeURIComponent(k.id);
 }
 function addKid(){
-  const course = $('add-course').value;
+  const cid = $('add-course').value;
   const h = ensureHub();
-  h.kids.push({id:newId(), name:(CAT[course] ? CAT[course].label : '학습자'), course:course, diff:0});
+  h.kids.push({id:newId(), name:(CAT[cid] ? CAT[cid].label : '학습자'), courses:[cid], diff:{}});
+  h.kids[h.kids.length - 1].diff[cid] = 0;
   saveHub(h); renderKids(); toast('학습자를 추가했어요');
 }
 
 /* ── 화면: 부모 리포트 ── */
-function renderParent(){
-  const h = ensureHub();
-  const blocks = h.kids.map(k => {
-    const c = courseOf(k);
+function courseBlock(k, cid){
+    const c = courseOf(cid);
     if(!c) return '';
-    const r = report(k);
+    const r = report(k, cid);
     const weakRows = r.weak.length ? r.weak.map(w => `<tr>
         <td><b>${esc(w.title)}</b></td>
         <td class="muted">${esc(w.sec)}</td>
@@ -303,8 +338,8 @@ function renderParent(){
         <td class="num">${s.ok}/${s.n}</td><td class="num">${rate(s.ok, s.n)}%</td>
       </tr>`).join('') || '<tr><td colspan="4" class="muted">기록이 없습니다</td></tr>';
     const need = r.wkSess >= 3 ? '이번 주 목표를 채웠습니다.' : `이번 주 ${r.wkSess}회 했습니다. ${3 - r.wkSess}회 더 하면 좋습니다.`;
-    return `<div class="card">
-      <h2>${esc(k.name)} · ${esc(c.name)}</h2>
+    return `<div class="cblock">
+      <h3>${esc(c.name)}</h3>
       <div class="kpis">
         <div class="kpi"><div class="v">${r.wkSess}</div><div class="k">이번 주 세션</div></div>
         <div class="kpi"><div class="v">${r.wkN}</div><div class="k">이번 주 문항</div></div>
@@ -326,6 +361,13 @@ function renderParent(){
       <h3>최근 세션</h3>
       <div class="tblwrap"><table><tr><th>날짜</th><th>종류</th><th>정답</th><th>정답률</th></tr>${sessRows}</table></div>
     </div>`;
+}
+function renderParent(){
+  const h = ensureHub();
+  const blocks = h.kids.map(k => {
+    const inner = k.courses.map(cid => courseBlock(k, cid)).join('')
+      || '<p class="muted">학습 중인 과목이 없습니다. 설정 탭에서 과목을 추가하세요.</p>';
+    return `<div class="card"><h2>${esc(k.name)}</h2>${inner}</div>`;
   }).join('');
   $('sc-parent').innerHTML = blocks + `<div class="card">
       <h2>읽는 법</h2>
@@ -341,11 +383,23 @@ function renderParent(){
 /* ── 화면: 설정 ── */
 function renderSet(){
   const h = ensureHub();
-  const rows = h.kids.map(k => `<div class="frow">
+  const rows = h.kids.map(k => {
+    const pills = k.courses.map(cid => {
+      const c = courseOf(cid);
+      return `<span class="pill">${esc(c ? c.label : cid)} <a href="#" onclick="delCourse('${k.id}','${cid}');return false" style="text-decoration:none;opacity:.6">×</a></span>`;
+    }).join(' ') || '<span class="muted">과목 없음</span>';
+    const rest = Object.keys(CAT).filter(cid => k.courses.indexOf(cid) < 0);
+    const add = rest.length
+      ? `<select class="inp slim" id="adc-${k.id}">${rest.map(cid => `<option value="${cid}">${esc(CAT[cid].label)}</option>`).join('')}</select>
+         <button class="btn mini ghost" onclick="addCourse('${k.id}')">과목 추가</button>`
+      : '<span class="muted">모든 과목을 학습 중입니다</span>';
+    return `<div class="setrow">
       <input class="inp" value="${esc(k.name)}" onchange="renameKid('${k.id}', this.value)" maxlength="12">
-      <span class="pill">${esc((courseOf(k) || {}).label || k.course)}</span>
-      <button class="btn mini ghost" onclick="delKid('${k.id}')">삭제</button>
-    </div>`).join('');
+      <div class="row" style="margin:8px 0 6px">${pills}</div>
+      <div class="frow">${add}
+        <button class="btn mini ghost" onclick="delKid('${k.id}')">학습자 삭제</button></div>
+    </div>`;
+  }).join('');
   $('sc-set').innerHTML = `
     <div class="card">
       <h2>학습자 이름</h2>
@@ -371,12 +425,34 @@ function renameKid(id, name){
   const h = ensureHub(), k = h.kids.find(x => x.id === id);
   if(k){ k.name = n; saveHub(h); toast('이름을 바꿨어요'); }
 }
+function addCourse(kidId){
+  const sel = $('adc-' + kidId); if(!sel) return;
+  const cid = sel.value;
+  const h = ensureHub(), k = h.kids.find(x => x.id === kidId); if(!k) return;
+  if(k.courses.indexOf(cid) < 0) k.courses.push(cid);
+  if(!k.diff || typeof k.diff !== 'object') k.diff = {};
+  if(typeof k.diff[cid] !== 'number') k.diff[cid] = 0;
+  saveHub(h); renderSet(); toast('과목을 추가했어요');
+}
+function delCourse(kidId, cid){
+  const h = ensureHub(), k = h.kids.find(x => x.id === kidId); if(!k) return;
+  if(k.courses.length <= 1){ toast('과목은 최소 한 개가 필요해요'); return; }
+  const c = courseOf(cid);
+  if(!confirm((c ? c.label : cid) + ' 과목을 목록에서 뺄까요? 학습 기록은 지우지 않습니다.')) return;
+  k.courses = k.courses.filter(x => x !== cid);
+  saveHub(h); renderSet(); toast('목록에서 뺐어요');
+}
+function dropState(k){
+  k.courses.forEach(cid => {
+    const c = courseOf(cid);
+    try{ if(c) localStorage.removeItem(c.store + '_state_v1_' + k.id); }catch(e){}
+  });
+}
 function delKid(id){
   const h = ensureHub(), k = h.kids.find(x => x.id === id);
   if(!k) return;
   if(!confirm(k.name + ' 학습자와 기록을 지울까요?')) return;
-  const c = courseOf(k);
-  try{ if(c) localStorage.removeItem(c.store + '_state_v1_' + k.id); }catch(e){}
+  dropState(k);
   h.kids = h.kids.filter(x => x.id !== id);
   saveHub(h); renderKids(); toast('삭제했어요');
 }
@@ -393,9 +469,12 @@ function pasteCfg(){
     if(!o || !Array.isArray(o.kids) || !o.kids.length) throw 0;
     const h = ensureHub();
     o.kids.forEach(nk => {
+      const courses = (Array.isArray(nk.courses) ? nk.courses : (nk.course ? [nk.course] : [])).filter(c => !!CAT[c]);
+      const diff = {};
+      courses.forEach(c => { diff[c] = (nk.diff && typeof nk.diff === 'object') ? ((nk.diff[c] | 0) || 0) : ((nk.diff | 0) || 0); });
       const cur = h.kids.find(x => x.id === nk.id);
-      if(cur){ cur.name = nk.name; cur.diff = nk.diff | 0; }
-      else h.kids.push({id:nk.id, name:nk.name, course:nk.course, diff:nk.diff | 0});
+      if(cur){ cur.name = nk.name; cur.courses = courses; cur.diff = diff; }
+      else h.kids.push({id:nk.id, name:nk.name, courses:courses, diff:diff});
     });
     saveHub(h); renderKids(); toast('설정을 가져왔어요');
   }catch(e){ toast('설정 형식이 올바르지 않아요'); }
@@ -403,10 +482,7 @@ function pasteCfg(){
 function wipe(){
   if(!confirm('학습자와 학습 기록을 모두 지울까요? 되돌릴 수 없습니다.')) return;
   const h = ensureHub();
-  h.kids.forEach(k => {
-    const c = courseOf(k);
-    try{ if(c) localStorage.removeItem(c.store + '_state_v1_' + k.id); }catch(e){}
-  });
+  h.kids.forEach(k => dropState(k));
   try{ localStorage.removeItem(HUBKEY); }catch(e){}
   renderKids(); toast('초기화했어요');
 }
