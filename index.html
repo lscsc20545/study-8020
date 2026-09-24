@@ -71,6 +71,9 @@
   td{ padding:9px 10px; border-bottom:1px solid #eef1f6; vertical-align:top; }
   tr:nth-child(even) td{ background:#f8fafd; }
   .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  /* 좁은 화면에서 표가 눌리지 않게 가로 스와이프 허용(부모 팁이 길어질 수 있음) */
+  .tblwrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tblwrap table{ min-width:520px; }
 
   ul.guide{ list-style:none; }
   ul.guide li{ font-size:13px; color:var(--sub); padding-left:14px; position:relative; margin-bottom:6px; }
@@ -311,17 +314,17 @@ function renderParent(){
       <div class="state ${r.stage.k === 'none' ? '' : r.stage.k}">${esc(r.stage.t)}</div>
 
       <h3>지금 짚어줄 개념</h3>
-      <table><tr><th>개념</th><th>단원</th><th>정답률</th><th>집에서 해줄 것</th></tr>${weakRows}</table>
+      <div class="tblwrap"><table><tr><th>개념</th><th>단원</th><th>정답률</th><th>집에서 해줄 것</th></tr>${weakRows}</table></div>
 
       <h3>다음에 배울 개념</h3>
-      <table><tr><th>개념</th><th>단원</th><th>미리 해두면 좋은 것</th></tr>${nextRows}</table>
+      <div class="tblwrap"><table><tr><th>개념</th><th>단원</th><th>미리 해두면 좋은 것</th></tr>${nextRows}</table></div>
 
       <h3>이번 주 준비사항</h3>
       <p class="muted" style="margin-bottom:8px">${esc(need)} 난이도는 '${r.diffName}'(목표 정답률 ${Math.round(r.target*100)}%)입니다.${r.last ? ' 마지막 학습 ' + esc(r.last) + '.' : ''}</p>
       <ul class="guide">${c.guide.map(g => `<li>${esc(g)}</li>`).join('')}</ul>
 
       <h3>최근 세션</h3>
-      <table><tr><th>날짜</th><th>종류</th><th>정답</th><th>정답률</th></tr>${sessRows}</table>
+      <div class="tblwrap"><table><tr><th>날짜</th><th>종류</th><th>정답</th><th>정답률</th></tr>${sessRows}</table></div>
     </div>`;
   }).join('');
   $('sc-parent').innerHTML = blocks + `<div class="card">
