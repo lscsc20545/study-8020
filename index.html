@@ -37,6 +37,8 @@
   h2{ font-size:15px; font-weight:800; color:var(--navy); }
   h3{ font-size:13px; font-weight:800; color:var(--sub); margin:16px 0 6px; }
   .muted{ color:var(--sub); font-size:13px; }
+  .hint{ background:#f0f7ff; border:1px solid #cfe2fb; border-radius:10px; padding:11px 13px;
+         font-size:13px; color:#2C4A6E; margin:10px 0 4px; }
 
   .kids{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .kid{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; }
@@ -140,6 +142,7 @@ const OLD_IDX = 'sr8020_index_v1';
 const SEVEN = 7 * 86400000;
 
 function $(id){ return document.getElementById(id); }
+const SYNC = {"url": "", "family": "fam-8f3c2a91d4b7"};   /* 서버 동기화: SYNC.url 이 비면 모두 로컬 전용으로 동작한다 */
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 function toast(msg){
   const t = $('toast'); t.textContent = msg; t.className = 'toast on';
@@ -254,6 +257,7 @@ function report(kid, cid){
     }
   }
   return {course:course, cid:cid, all:all, S:S, st:st, sess:sess, learned:learned, total:all.length,
+          empty:!(sess.length || learned),
           cumN:cumN, cumOk:cumOk, cumAcc:rate(cumOk, cumN),
           wkSess:wk.length, wkN:wkN, wkAcc:rate(wkOk, wkN),
           diff:diff, diffName:DIFFS[diff].name, target:target,
@@ -340,6 +344,9 @@ function courseBlock(k, cid){
     const need = r.wkSess >= 3 ? '이번 주 목표를 채웠습니다.' : `이번 주 ${r.wkSess}회 했습니다. ${3 - r.wkSess}회 더 하면 좋습니다.`;
     return `<div class="cblock">
       <h3>${esc(c.name)}</h3>
+      ${r.empty ? `<p class="hint">${SYNC.url
+        ? `<b>${esc(k.name)}의 ${esc(c.label)} 기록을 서버에서 확인하는 중입니다.</b> 아이가 학습을 마치면 자동으로 올라옵니다. 잠시 뒤 <b>부모 리포트</b> 탭을 다시 열어 보세요.`
+        : `<b>이 기기에는 ${esc(k.name)}의 ${esc(c.label)} 학습 기록이 없습니다.</b> 아이가 폰·태블릿 등 다른 기기에서 학습했다면, 그 기기의 <b>설정 → 기록 코드 복사</b>를 누른 뒤 이 기기의 <b>설정 → 기록 코드 붙여넣기</b>에 넣어 주세요. 그러면 여기에 그대로 표시됩니다.`}</p>` : ''}
       <div class="kpis">
         <div class="kpi"><div class="v">${r.wkSess}</div><div class="k">이번 주 세션</div></div>
         <div class="kpi"><div class="v">${r.wkN}</div><div class="k">이번 주 문항</div></div>
@@ -398,6 +405,10 @@ function renderSet(){
       <div class="row" style="margin:8px 0 6px">${pills}</div>
       <div class="frow">${add}
         <button class="btn mini ghost" onclick="delKid('${k.id}')">학습자 삭제</button></div>
+      <div class="frow">
+        <button class="btn mini ghost" onclick="recCopy('${k.id}')">기록 코드 복사</button>
+        <input class="inp slim" id="rec-${k.id}" readonly placeholder="아이 기기 기록을 부모 기기로 옮길 때">
+      </div>
     </div>`;
   }).join('');
   $('sc-set').innerHTML = `
@@ -408,10 +419,23 @@ function renderSet(){
     </div>
     <div class="card">
       <h2>기기 간 설정 옮기기</h2>
-      <p class="muted" style="margin-bottom:8px">학습 기록은 기기마다 따로 저장됩니다. 학습자 이름·난이도 설정만 아래 방법으로 옮길 수 있습니다.</p>
+      <p class="muted" style="margin-bottom:8px">학습자 이름·과목·난이도 설정을 옮깁니다. 학습 기록은 아래 '기록 코드' 카드로 옮깁니다.</p>
       <button class="btn mini" onclick="copyCfg()">설정 복사</button>
       <button class="btn mini ghost" onclick="pasteCfg()">설정 붙여넣기</button>
       <textarea class="inp" id="cfg" style="margin-top:10px" placeholder="여기에 설정 JSON을 붙여넣고 '설정 붙여넣기'를 누르세요"></textarea>
+    </div>
+    <div class="card">
+      <h2>서버 동기화</h2>
+      ${SYNC.url
+        ? `<p class="muted" style="margin-bottom:8px">켜짐 — 아이 기기에서 학습한 기록이 자동으로 올라오고, 이 화면에 반영됩니다.</p>
+           <button class="btn mini ghost" onclick="syncBoot(true)">지금 동기화</button>`
+        : `<p class="muted">꺼짐(로컬 전용) — 기록은 이 브라우저에만 저장됩니다. 아래 '기록 코드'로 기기 간에 옮길 수 있습니다.</p>`}
+    </div>
+    <div class="card">
+      <h2>기록 코드 붙여넣기 (아이 기기 기록 가져오기)</h2>
+      <p class="muted" style="margin-bottom:8px">아이가 쓰는 기기에서 <b>기록 코드 복사</b>를 누른 뒤 그 코드를 아래에 붙여넣으면, 이 기기 부모 리포트에 학습 기록이 그대로 나타납니다. 같은 과목 기록은 날짜가 최신인 쪽으로 합쳐집니다.</p>
+      <button class="btn mini" onclick="recPaste()">기록 가져오기</button>
+      <textarea class="inp" id="recin" style="margin-top:10px" placeholder="아이 기기에서 복사한 기록 코드를 붙여넣으세요"></textarea>
     </div>
     <div class="card">
       <h2>기록 삭제</h2>
@@ -456,6 +480,63 @@ function delKid(id){
   h.kids = h.kids.filter(x => x.id !== id);
   saveHub(h); renderKids(); toast('삭제했어요');
 }
+/* ── 학습 기록 코드 (기기 간 옮기기) ──────────────────────────
+   학습 기록은 localStorage에만 있어 기기·브라우저가 다르면 넘어오지 않는다.
+   아이 기기에서 코드를 만들어 부모 기기에 붙여넣어 옮긴다. */
+function b64e(s){ return btoa(unescape(encodeURIComponent(s))); }
+function b64d(s){ return decodeURIComponent(escape(atob(s))); }
+function recPack(kidId){
+  const h = ensureHub(), k = h.kids.find(x => x.id === kidId);
+  if(!k) return '';
+  const states = {};
+  k.courses.forEach(cid => { const st = stateOf(k, cid); if(st) states[cid] = st; });
+  if(!Object.keys(states).length) return '';
+  return b64e(JSON.stringify({v:1, kid:k.id, states:states}));
+}
+function recCopy(kidId){
+  const code = recPack(kidId);
+  if(!code){ toast('아직 복사할 기록이 없어요'); return; }
+  const el = $('rec-' + kidId); if(el) el.value = code;
+  try{ navigator.clipboard.writeText(code); toast('기록 코드를 복사했어요'); }
+  catch(e){ toast('아래 칸의 코드를 길게 눌러 복사해 주세요'); }
+}
+function mergeState(a, b){
+  if(!a) return b;
+  if(!b) return a;
+  const out = JSON.parse(JSON.stringify(a));
+  out.c = out.c || {}; out.sess = out.sess || [];
+  Object.keys(b.c || {}).forEach(id => {
+    const x = out.c[id], y = b.c[id] || {};
+    if(!x || String(y.last || '') > String(x.last || '') || (y.n || 0) > (x.n || 0)) out.c[id] = y;
+  });
+  const seen = {};
+  out.sess.concat(b.sess || []).forEach(s => { seen[JSON.stringify(s)] = s; });
+  out.sess = Object.keys(seen).map(x => seen[x])
+    .sort((p, q) => String(p.d).localeCompare(String(q.d))).slice(-80);
+  out.diag = !!(out.diag || b.diag);
+  out.v = out.v || b.v;
+  return out;
+}
+function recPaste(){
+  const box = $('recin'); if(!box) return;
+  let o = null;
+  try{ o = JSON.parse(b64d((box.value || '').trim())); }catch(e){}
+  if(!o || !o.states){ toast('기록 코드를 읽지 못했어요'); return; }
+  const h = ensureHub(), k = h.kids.find(x => x.id === o.kid);
+  if(!k){ toast('이 코드의 학습자가 설정에 없어요'); return; }
+  let n = 0;
+  k.courses.forEach(cid => {
+    const c = courseOf(cid);
+    if(!c || !o.states[cid]) return;
+    let cur = null;
+    try{ const r = localStorage.getItem(c.store + '_state_v1_' + k.id); cur = r ? JSON.parse(r) : null; }catch(e){}
+    try{ localStorage.setItem(c.store + '_state_v1_' + k.id, JSON.stringify(mergeState(cur, o.states[cid]))); n++; }catch(e){}
+  });
+  box.value = '';
+  k.courses.forEach(cid => syncPut(k, cid, stateOf(k, cid)));
+  renderKids(); renderParent(); renderSet();
+  toast(n ? (n + '개 과목 기록을 가져왔어요') : '가져올 과목 기록이 없어요');
+}
 function copyCfg(){
   const h = ensureHub();
   const cfg = JSON.stringify({kids:h.kids});
@@ -499,9 +580,46 @@ function go(t){
   window.scrollTo(0, 0);
 }
 
+/* ── 서버 동기화 (선택) ────────────────────────────────────
+   계약: GET/POST {url}/api/state?key=<family>/<store>~<pid> , 본문 = 상태 JSON */
+function syncKey(kid, cid){
+  const c = courseOf(cid);
+  return c ? (SYNC.family + '/' + c.store + '~' + kid.id) : '';
+}
+function syncPut(kid, cid, st){
+  const key = st ? syncKey(kid, cid) : '';
+  if(!SYNC.url || !key) return;
+  try{
+    fetch(SYNC.url + '/api/state?key=' + encodeURIComponent(key), {
+      method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body: JSON.stringify(st)
+    }).catch(() => {});
+  }catch(e){}
+}
+function syncBoot(manual){
+  if(!SYNC.url){ if(manual) toast('서버 동기화가 꺼져 있어요(로컬 전용)'); return; }
+  const h = ensureHub();
+  const jobs = [];
+  let got = 0;
+  h.kids.forEach(k => k.courses.forEach(cid => {
+    const c = courseOf(cid); if(!c) return;
+    jobs.push(fetch(SYNC.url + '/api/state?key=' + encodeURIComponent(SYNC.family + '/' + c.store + '~' + k.id))
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if(!j || !Array.isArray(j.sess)) return;
+        const merged = mergeState(stateOf(k, cid), j);
+        try{ localStorage.setItem(c.store + '_state_v1_' + k.id, JSON.stringify(merged)); got++; }catch(e){}
+      }).catch(() => {}));
+  }));
+  Promise.all(jobs).then(() => {
+    renderKids(); renderParent(); renderSet();
+    if(manual) toast(got ? (got + '개 기록을 서버에서 받았어요') : '서버에 새 기록이 없어요');
+  });
+}
+
 /* ── 시작 ── */
 ensureHub();
 renderKids();
+syncBoot();
 </script>
 </body>
 </html>

@@ -336,7 +336,8 @@ const NS = (BANK.meta && BANK.meta.store) || 'sr8020';
 const IDXKEY = NS + '_index_v1';                 // 프로필 목록
 const STATE_PREFIX = NS + '_state_v1_';          // 프로필별 학습 기록
 /* Phase 2: 원격 저장소(Cloudflare D1 등)가 준비되면 url만 채우면 된다. 비워두면 로컬 전용. */
-const REMOTE = { url: '' };
+const SYNC = {"url": "", "family": "fam-8f3c2a91d4b7"};
+const REMOTE = { url: SYNC.url, family: SYNC.family };
 let IDX = null, S = null, syncTimer = null, sugMuted = false;
 const TIER_TH = {1:0.50, 2:0.46, 3:0.42};
 
@@ -418,27 +419,50 @@ function save(skipSync){
   try{ localStorage.setItem(stateKey(curPid()), JSON.stringify(S)); }catch(e){ storeBroken = true; }
   if(!skipSync) syncPush();
 }
+/* ── 서버 동기화 (선택) ────────────────────────────────────
+   REMOTE.url 이 비어 있으면 아래 함수가 모두 즉시 반환해 로컬 전용 동작과 같아진다.
+   계약: GET/POST {url}/api/state?key=<family>/<store>~<pid> , 본문 = 상태 JSON */
+function syncKey(){ return SYNC.family + '/' + NS + '~' + curPid(); }
+function mergeState(a, b){
+  if(!a) return b;
+  if(!b) return a;
+  const out = JSON.parse(JSON.stringify(a));
+  out.c = out.c || {}; out.sess = out.sess || [];
+  Object.keys(b.c || {}).forEach(id => {
+    const x = out.c[id], y = b.c[id] || {};
+    if(!x || String(y.last || '') > String(x.last || '') || (y.n || 0) > (x.n || 0)) out.c[id] = y;
+  });
+  const seen = {};
+  out.sess.concat(b.sess || []).forEach(s => { seen[JSON.stringify(s)] = s; });
+  out.sess = Object.keys(seen).map(x => seen[x])
+    .sort((p, q) => String(p.d).localeCompare(String(q.d))).slice(-80);
+  out.diag = !!(out.diag || b.diag);
+  out.v = out.v || b.v;
+  return out;
+}
 function syncPush(){
   if(!REMOTE.url) return;
-  const pid = curPid();
   clearTimeout(syncTimer);
   syncTimer = setTimeout(() => {
     try{
-      fetch(REMOTE.url + '/api/state?profile=' + encodeURIComponent(pid), {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(S)
-      }).catch(() => {});
+      fetch(REMOTE.url + '/api/state?key=' + encodeURIComponent(syncKey()), {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=UTF-8'},
+        body: JSON.stringify(S)
+      }).then(r => { SYNC_ON = !!r.ok; }).catch(() => {});
     }catch(e){}
   }, 1200);
 }
 function syncPull(){
   if(!REMOTE.url) return;
-  fetch(REMOTE.url + '/api/state?profile=' + encodeURIComponent(curPid()))
+  fetch(REMOTE.url + '/api/state?key=' + encodeURIComponent(syncKey()))
     .then(r => r.ok ? r.json() : null)
     .then(j => {
-      if(j && j.c && Array.isArray(j.sess) && j.sess.length > S.sess.length){
-        S = j; save(true); refreshExtra(); renderHome(); renderProfBar();
-        toast('다른 기기 기록을 불러왔어요');
-      }
+      if(!j || !Array.isArray(j.sess)) return;
+      const merged = mergeState(S, j);
+      const grew = (merged.sess || []).length > (S.sess || []).length;
+      S = merged; save(true); refreshExtra(); renderProfBar(); renderDiffBar(); renderHome();
+      if(grew) toast('다른 기기 기록을 불러왔어요');
     }).catch(() => {});
 }
 
